@@ -1,4 +1,4 @@
-package org.birkir.carplay.parser
+package io.automotive.rn.parser
 
 import androidx.car.app.CarContext
 import androidx.car.app.model.PlaceListMapTemplate
@@ -10,7 +10,7 @@ import androidx.car.app.navigation.model.PanModeListener
 import androidx.car.app.navigation.model.PlaceListNavigationTemplate
 import androidx.car.app.navigation.model.RoutePreviewNavigationTemplate
 import com.facebook.react.bridge.ReadableMap
-import org.birkir.carplay.screens.CarScreenContext
+import io.automotive.rn.screens.CarScreenContext
 
 class RCTMapTemplate(
   context: CarContext,

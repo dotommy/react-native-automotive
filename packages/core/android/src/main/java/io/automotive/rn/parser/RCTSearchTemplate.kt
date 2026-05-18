@@ -1,10 +1,10 @@
-package org.birkir.carplay.parser
+package io.automotive.rn.parser
 
 import androidx.car.app.CarContext
 import androidx.car.app.model.SearchTemplate
 import androidx.car.app.model.SearchTemplate.SearchCallback
 import com.facebook.react.bridge.ReadableMap
-import org.birkir.carplay.screens.CarScreenContext
+import io.automotive.rn.screens.CarScreenContext
 
 
 class RCTSearchTemplate(

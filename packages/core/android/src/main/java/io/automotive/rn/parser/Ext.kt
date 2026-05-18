@@ -1,4 +1,4 @@
-package org.birkir.carplay.parser
+package io.automotive.rn.parser
 
 import com.facebook.react.bridge.ReadableMap
 

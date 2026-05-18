@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="org.birkir.carplay">
+  package="io.automotive.rn">
 
   <uses-permission android:name="androidx.car.app.NAVIGATION_TEMPLATES" />
   <uses-permission android:name="androidx.car.app.MAP_TEMPLATES" />
@@ -8,10 +8,10 @@
 
   <application>
     <service
-      android:name=".CarPlayService"
+      android:name=".AutomotiveService"
       android:exported="true">
       <intent-filter>
-        <action android:name="org.birkir.carplay.APP_RELOAD" />
+        <action android:name="io.automotive.rn.APP_RELOAD" />
       </intent-filter>
       <intent-filter>
         <action android:name="androidx.car.app.CarAppService" />

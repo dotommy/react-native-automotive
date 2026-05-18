@@ -1,4 +1,4 @@
-package org.birkir.carplay
+package io.automotive.rn
 
 import android.content.Intent
 import android.os.Handler
@@ -27,16 +27,16 @@ import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.debug.DevSettingsModule
-import org.birkir.carplay.parser.Parser
-import org.birkir.carplay.parser.TemplateParser
-import org.birkir.carplay.screens.CarScreen
-import org.birkir.carplay.screens.CarScreenContext
-import org.birkir.carplay.utils.EventEmitter
+import io.automotive.rn.parser.Parser
+import io.automotive.rn.parser.TemplateParser
+import io.automotive.rn.screens.CarScreen
+import io.automotive.rn.screens.CarScreenContext
+import io.automotive.rn.utils.EventEmitter
 import java.util.WeakHashMap
 
 
-@ReactModule(name = CarPlayModule.NAME)
-class CarPlayModule internal constructor(private val reactContext: ReactApplicationContext) :
+@ReactModule(name = AutomotiveModule.NAME)
+class AutomotiveModule internal constructor(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
   private lateinit var carContext: CarContext
@@ -251,7 +251,7 @@ class CarPlayModule internal constructor(private val reactContext: ReactApplicat
 
   @ReactMethod
   fun reload() {
-    val intent = Intent("org.birkir.carplay.APP_RELOAD")
+    val intent = Intent("io.automotive.rn.APP_RELOAD")
     reactContext.sendBroadcast(intent)
   }
 

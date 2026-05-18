@@ -1,4 +1,4 @@
-package org.birkir.carplay.parser
+package io.automotive.rn.parser
 
 import android.util.Log
 import androidx.car.app.CarContext
@@ -12,7 +12,7 @@ import androidx.car.app.model.TabContents
 import androidx.car.app.model.TabTemplate
 import androidx.car.app.model.TabTemplate.TabCallback
 import com.facebook.react.bridge.ReadableMap
-import org.birkir.carplay.screens.CarScreenContext
+import io.automotive.rn.screens.CarScreenContext
 
 class RCTTabTemplate(
   context: CarContext,

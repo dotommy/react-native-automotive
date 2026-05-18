@@ -31,11 +31,11 @@ if (isNewArchitectureEnabled()) {
 }
 
 def getExtOrDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["Carplay_" + name]
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["Automotive_" + name]
 }
 
 def getExtOrIntegerDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["Carplay_" + name]).toInteger()
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["Automotive_" + name]).toInteger()
 }
 
 def supportsNamespace() {
@@ -53,7 +53,7 @@ def supportsNamespace() {
 
 android {
   if (supportsNamespace()) {
-    namespace "org.birkir.carplay"
+    namespace "io.automotive.rn"
 
     sourceSets {
       main {
@@ -104,7 +104,6 @@ dependencies {
   implementation "com.facebook.react:react-native:+"
   implementation "androidx.car.app:app-projected:1.4.0-beta02"
   implementation "androidx.car.app:app:1.4.0-beta02"
-  implementation "org.greenrobot:eventbus:3.2.0"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 

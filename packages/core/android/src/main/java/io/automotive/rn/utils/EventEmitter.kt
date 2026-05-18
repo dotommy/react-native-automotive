@@ -1,4 +1,4 @@
-package org.birkir.carplay.utils
+package io.automotive.rn.utils
 
 import android.util.Log
 import com.facebook.react.bridge.Arguments

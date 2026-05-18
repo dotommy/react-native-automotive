@@ -1,4 +1,4 @@
-package org.birkir.carplay.parser
+package io.automotive.rn.parser
 
 // import androidx.car.app.model.Template
 
@@ -46,8 +46,8 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.views.imagehelper.ImageSource
-import org.birkir.carplay.screens.CarScreenContext
-import org.birkir.carplay.utils.EventEmitter
+import io.automotive.rn.screens.CarScreenContext
+import io.automotive.rn.utils.EventEmitter
 import java.util.TimeZone
 
 

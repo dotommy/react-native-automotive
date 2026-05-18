@@ -1,6 +1,6 @@
-package org.birkir.carplay.screens
+package io.automotive.rn.screens
 
-import org.birkir.carplay.utils.EventEmitter
+import io.automotive.rn.utils.EventEmitter
 import java.util.WeakHashMap
 
 data class CarScreenContext(

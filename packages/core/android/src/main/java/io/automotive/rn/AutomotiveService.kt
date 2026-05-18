@@ -1,4 +1,4 @@
-package org.birkir.carplay
+package io.automotive.rn
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -12,7 +12,7 @@ import androidx.car.app.validation.HostValidator
 import com.facebook.react.ReactApplication
 import com.facebook.react.ReactInstanceManager
 
-class CarPlayService : CarAppService() {
+class AutomotiveService : CarAppService() {
   private lateinit var reactInstanceManager: ReactInstanceManager
   override fun onCreate() {
     super.onCreate()
@@ -26,10 +26,10 @@ class CarPlayService : CarAppService() {
 
   override fun onCreateSession(sessionInfo: SessionInfo): Session {
     Log.d(TAG, "onCreateSession: sessionId = ${sessionInfo.sessionId}, display = ${sessionInfo.displayType}")
-    return CarPlaySession(reactInstanceManager)
+    return AutomotiveSession(reactInstanceManager)
   }
 
   companion object {
-    var TAG = "CarPlayService"
+    var TAG = "AutomotiveService"
   }
 }

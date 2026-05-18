@@ -1,4 +1,4 @@
-package org.birkir.carplay
+package io.automotive.rn
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -22,10 +22,10 @@ import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.modules.appregistry.AppRegistry
 import com.facebook.react.modules.core.TimingModule
 import com.facebook.react.modules.debug.DevSettingsModule
-import org.birkir.carplay.screens.CarScreen
+import io.automotive.rn.screens.CarScreen
 
 
-class CarPlaySession(private val reactInstanceManager: ReactInstanceManager) : Session(), DefaultLifecycleObserver {
+class AutomotiveSession(private val reactInstanceManager: ReactInstanceManager) : Session(), DefaultLifecycleObserver {
   private lateinit var screen: CarScreen
 
   @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -40,19 +40,19 @@ class CarPlaySession(private val reactInstanceManager: ReactInstanceManager) : S
     if (Build.VERSION.SDK_INT >= 34 && carContext.getApplicationInfo().targetSdkVersion >= 34) {
     carContext.registerReceiver(object : BroadcastReceiver() {
       override fun onReceive(context: Context, intent: Intent) {
-        if ("org.birkir.carplay.APP_RELOAD" == intent.action) {
+        if ("io.automotive.rn.APP_RELOAD" == intent.action) {
           invokeStartTask(reactInstanceManager.currentReactContext!!);
         }
       }
-    }, IntentFilter("org.birkir.carplay.APP_RELOAD"), Context.RECEIVER_EXPORTED)
+    }, IntentFilter("io.automotive.rn.APP_RELOAD"), Context.RECEIVER_EXPORTED)
     }else{
            carContext.registerReceiver(object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                 if ("org.birkir.carplay.APP_RELOAD" == intent.action) {
+                 if ("io.automotive.rn.APP_RELOAD" == intent.action) {
                      invokeStartTask(reactInstanceManager.currentReactContext!!);
                    }
                }
-      }, IntentFilter("org.birkir.carplay.APP_RELOAD"))
+      }, IntentFilter("io.automotive.rn.APP_RELOAD"))
     }
 
     // Run JS
@@ -94,7 +94,7 @@ class CarPlaySession(private val reactInstanceManager: ReactInstanceManager) : S
         TimingModule::class.java
       )
       val carModule = reactInstanceManager
-        .currentReactContext?.getNativeModule(CarPlayModule::class.java)
+        .currentReactContext?.getNativeModule(AutomotiveModule::class.java)
       carModule!!.setCarContext(carContext, screen)
       timingModule!!.onHostResume()
 
@@ -111,16 +111,16 @@ class CarPlaySession(private val reactInstanceManager: ReactInstanceManager) : S
 
   override fun onNewIntent(intent: Intent) {
     // handle intents
-    Log.d(TAG, "CarPlaySession.onNewIntent")
+    Log.d(TAG, "AutomotiveSession.onNewIntent")
   }
 
   override fun onCarConfigurationChanged(configuration: Configuration) {
     // we should report this over the bridge
-    Log.d(TAG, "CarPlaySession.onCarConfigurationChanged")
+    Log.d(TAG, "AutomotiveSession.onCarConfigurationChanged")
   }
 
   companion object {
-    const val TAG = "CarPlaySession"
+    const val TAG = "AutomotiveSession"
   }
 }
 

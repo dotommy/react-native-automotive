@@ -1,11 +1,11 @@
-package org.birkir.carplay.parser
+package io.automotive.rn.parser
 
 import androidx.car.app.CarContext
 import androidx.car.app.model.Pane
 import androidx.car.app.model.PaneTemplate
 import androidx.car.app.model.Template
 import com.facebook.react.bridge.ReadableMap
-import org.birkir.carplay.screens.CarScreenContext
+import io.automotive.rn.screens.CarScreenContext
 
 class TemplateParser internal constructor(
   private val context: CarContext,

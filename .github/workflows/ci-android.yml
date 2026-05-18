@@ -1,0 +1,89 @@
+name: ci/android
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - dev
+    paths:
+      - 'packages/core/android/**'
+      - 'packages/core/src/specs/**'
+      - 'apps/example/android/**'
+      - 'apps/example/package.json'
+      - 'package.json'
+      - 'yarn.lock'
+      - '.github/workflows/ci-android.yml'
+
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      - 'packages/core/android/**'
+      - 'packages/core/src/specs/**'
+      - 'apps/example/android/**'
+      - 'apps/example/package.json'
+      - 'package.json'
+      - 'yarn.lock'
+      - '.github/workflows/ci-android.yml'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build example app (Android Debug)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Get Yarn cache directory
+        id: yarn-cache-dir
+        run: echo "dir=$(yarn config get cacheFolder)" >> "$GITHUB_OUTPUT"
+
+      - name: Restore Yarn cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: yarn-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            yarn-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build (Debug)
+        working-directory: apps/example/android
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Upload build reports on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-build-reports
+          path: |
+            apps/example/android/**/build/reports/**
+            apps/example/android/**/build/outputs/logs/**
+          retention-days: 7
+          if-no-files-found: warn

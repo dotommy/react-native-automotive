@@ -1,4 +1,4 @@
-package org.birkir.carplay.screens
+package io.automotive.rn.screens
 
 import android.util.Log
 import androidx.car.app.CarContext
@@ -16,7 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.facebook.react.bridge.ReadableMap
-import org.birkir.carplay.utils.VirtualRenderer
+import io.automotive.rn.utils.VirtualRenderer
 
 class CarScreen(carContext: CarContext) : Screen(carContext) {
 
