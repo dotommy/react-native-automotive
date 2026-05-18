@@ -1,0 +1,8 @@
+{
+  "main": "../lib/experimental/index.js",
+  "module": "../lib/experimental/index.js",
+  "types": "../lib/experimental/index.d.ts",
+  "react-native": "../src/experimental/index.ts",
+  "source": "../src/experimental/index.ts",
+  "sideEffects": false
+}

@@ -23,13 +23,15 @@ import { NowPlayingTemplate } from './templates/NowPlayingTemplate';
 import { PointOfInterestTemplate } from './templates/PointOfInterestTemplate';
 import { SearchTemplate } from './templates/SearchTemplate';
 import { TabBarTemplate } from './templates/TabBarTemplate';
-import { VoiceControlTemplate } from './templates/VoiceControlTemplate';
+import { VoiceControlTemplate } from './experimental/VoiceControlTemplate';
 import { MessageTemplate } from './templates/android/MessageTemplate';
 import { NavigationTemplate } from './templates/android/NavigationTemplate';
 import { PaneTemplate } from './templates/android/PaneTemplate';
-import { PlaceListMapTemplate } from './templates/android/PlaceListMapTemplate';
-import { PlaceListNavigationTemplate } from './templates/android/PlaceListNavigationTemplate';
-import { RoutePreviewNavigationTemplate } from './templates/android/RoutePreviewNavigationTemplate';
+import { SignInTemplate } from './templates/android/SignInTemplate';
+import { TabTemplate } from './templates/android/TabTemplate';
+import { PlaceListMapTemplate } from './experimental/PlaceListMapTemplate';
+import { PlaceListNavigationTemplate } from './experimental/PlaceListNavigationTemplate';
+import { RoutePreviewNavigationTemplate } from './experimental/RoutePreviewNavigationTemplate';
 
 export interface InternalCarPlay extends NativeModule {
   checkForConnection(): void;
@@ -116,11 +118,14 @@ export type PushableTemplates =
   | ContactTemplate
   | NowPlayingTemplate
   | NavigationTemplate
+  | SignInTemplate
   | PlaceListMapTemplate
   | PlaceListNavigationTemplate
   | RoutePreviewNavigationTemplate;
 
 export type PresentableTemplates = AlertTemplate | ActionSheetTemplate | VoiceControlTemplate;
+
+export type RootOnlyTemplates = TabBarTemplate | TabTemplate;
 
 export type WindowInformation = {
   width: number;
@@ -215,7 +220,7 @@ export class CarPlayInterface {
    * @param rootTemplate The root template. Replaces the current rootTemplate, if one exists.
    * @param animated Set TRUE to animate the presentation of the root template; ignored if there isn't a current rootTemplate.
    */
-  public setRootTemplate(rootTemplate: PushableTemplates | TabBarTemplate, animated = true) {
+  public setRootTemplate(rootTemplate: PushableTemplates | RootOnlyTemplates, animated = true) {
     return this.bridge.setRootTemplate(rootTemplate.id, animated);
   }
 

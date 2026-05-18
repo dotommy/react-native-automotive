@@ -56,3 +56,6 @@ buck-out/
 ## Package
 .env
 lib
+
+## Turborepo
+.turbo/

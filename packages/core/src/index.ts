@@ -11,15 +11,17 @@ export * from './templates/NowPlayingTemplate';
 export * from './templates/PointOfInterestTemplate';
 export * from './templates/SearchTemplate';
 export * from './templates/TabBarTemplate';
-export * from './templates/VoiceControlTemplate';
 
 // Android-only Templates
 export * from './templates/android/MessageTemplate';
 export * from './templates/android/NavigationTemplate';
 export * from './templates/android/PaneTemplate';
-export * from './templates/android/PlaceListMapTemplate';
-export * from './templates/android/PlaceListNavigationTemplate';
-export * from './templates/android/RoutePreviewNavigationTemplate';
+export * from './templates/android/SignInTemplate';
+export * from './templates/android/TabTemplate';
+
+// Note: experimental APIs (PlaceListMap, PlaceListNavigation, RoutePreview,
+// VoiceControlTemplate, VoiceControlState) live under
+// `react-native-automotive/experimental`.
 
 // Others
 export * from './CarPlay';
@@ -47,4 +49,3 @@ export * from './interfaces/Place';
 export * from './interfaces/TextConfiguration';
 export * from './interfaces/TimeRemainingColor';
 export * from './interfaces/TravelEstimates';
-export * from './interfaces/VoiceControlState';

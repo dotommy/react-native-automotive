@@ -10,6 +10,7 @@
     "lib",
     "ios",
     "android",
+    "experimental",
     "react-native-automotive.podspec"
   ],
   "podspecPath": "./react-native-automotive.podspec",
@@ -30,6 +31,14 @@
     "navigation"
   ],
   "license": "MIT",
+  "codegenConfig": {
+    "name": "RNAutomotiveSpec",
+    "type": "modules",
+    "jsSrcsDir": "src/specs",
+    "android": {
+      "javaPackageName": "io.automotive.rn"
+    }
+  },
   "peerDependencies": {
     "react": "^17.0.2 || ^18.0.0",
     "react-native": "^0.60.0"

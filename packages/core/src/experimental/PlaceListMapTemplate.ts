@@ -1,10 +1,10 @@
-import { Action, HeaderAction } from '../../interfaces/Action';
+import { Action, HeaderAction } from '../interfaces/Action';
 import {
   AndroidNavigationBaseTemplate,
   AndroidNavigationBaseTemplateConfig,
-} from './AndroidNavigationBaseTemplate';
-import { Place } from '../../interfaces/Place';
-import { ListItem } from '../../interfaces/ListItem';
+} from '../templates/android/AndroidNavigationBaseTemplate';
+import { Place } from '../interfaces/Place';
+import { ListItem } from '../interfaces/ListItem';
 
 export interface PlaceListMapTemplateConfig extends AndroidNavigationBaseTemplateConfig {
   /**
