@@ -20,11 +20,11 @@ Pod::Spec.new do |s|
 
   s.source_files  = "ios/*.{h,m,swift}"
 
-  # Swift interop with Objective-C (React Native + CarPlay headers).
-  # DEFINES_MODULE generates the modulemap that exposes Swift classes
-  # back to Objective-C via the auto-generated `<PodName>-Swift.h` umbrella.
+  # DEFINES_MODULE generates the modulemap that:
+  # 1. Exposes Swift classes to Obj-C via auto-generated `<PodName>-Swift.h`
+  # 2. Exposes the pod's Obj-C headers to Swift code in the same module
+  #    (no bridging header needed — framework targets reject those).
   s.pod_target_xcconfig = {
-    'SWIFT_OBJC_BRIDGING_HEADER' => '${PODS_TARGET_SRCROOT}/ios/RNAutomotive-Bridging-Header.h',
     'DEFINES_MODULE' => 'YES',
     'CLANG_ENABLE_MODULES' => 'YES'
   }
