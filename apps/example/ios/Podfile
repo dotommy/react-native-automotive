@@ -55,5 +55,15 @@ target 'RNCarPlayScene' do
       :mac_catalyst_enabled => false
     )
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
+
+    # RN 0.71 ships several pods (Flipper, FBLazyVector, etc.) with
+    # IPHONEOS_DEPLOYMENT_TARGET hardcoded to 11.0, which Xcode 15+ rejects
+    # (supported range is 12.0–17.5). Bump every pod to match the app target.
+    # Remove when example app moves to RN 0.76+ at Step 10.
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
+      end
+    end
   end
 end
