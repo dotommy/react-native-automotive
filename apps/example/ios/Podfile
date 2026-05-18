@@ -65,5 +65,19 @@ target 'RNCarPlayScene' do
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
       end
     end
+
+    # Disable the precompiled bridging header on the app target. RN 0.71's
+    # generated module map for Yoga (and a few others) isn't visible to the
+    # PCH compiler on Xcode 15+, producing "module 'yoga' is not defined in
+    # any loaded module map file" when the bridging header AST is read back.
+    # Slight build-time cost; eliminated when example moves to RN 0.76+.
+    installer.aggregate_targets.each do |aggregate_target|
+      aggregate_target.user_project.native_targets.each do |native_target|
+        native_target.build_configurations.each do |config|
+          config.build_settings['SWIFT_PRECOMPILE_BRIDGING_HEADER'] = 'NO'
+        end
+      end
+      aggregate_target.user_project.save
+    end
   end
 end
