@@ -74,6 +74,15 @@ jobs:
           restore-keys: |
             pods-${{ runner.os }}-
 
+      # RN 0.71 ships a boost.podspec pointing to boostorg.jfrog.io which
+      # serves an inconsistent archive (checksum mismatch). Patch the URL
+      # to the stable archives.boost.io mirror before pod install.
+      # Remove when example app is bumped to RN 0.76+ at Step 10.
+      - name: Patch boost.podspec (RN 0.71 jfrog mirror is broken)
+        run: |
+          sed -i '' 's|boostorg.jfrog.io/artifactory/main|archives.boost.io|g' \
+            node_modules/react-native/third-party-podspecs/boost.podspec
+
       - name: Pod install
         working-directory: apps/example/ios
         run: pod install --repo-update
