@@ -1,12 +1,12 @@
 # Sample workflow for building and deploying a Jekyll site to GitHub Pages
 name: ci/gh-pages
 
+# Disabled: this workflow deploys apps/docs (Next.js + Nextra) which is
+# scheduled for replacement with VitePress in Step 11 of the BRIEF
+# roadmap. It also uses actions/upload-pages-artifact@v2 which transitively
+# depends on the deprecated actions/upload-artifact@v3, blocking execution.
+# Re-enable / replace with VitePress build pipeline when migration lands.
 on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: ["master"]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
