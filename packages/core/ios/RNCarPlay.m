@@ -378,19 +378,8 @@ RCT_EXPORT_METHOD(createTemplate:(NSString *)templateId config:(NSDictionary*)co
         CPActionSheetTemplate *actionSheetTemplate = [[CPActionSheetTemplate alloc] initWithTitle:title message:message actions:actions];
         carPlayTemplate = actionSheetTemplate;
     } else if ([type isEqualToString:@"alert"]) {
-        NSMutableArray<CPAlertAction *> *actions = [NSMutableArray new];
-        NSArray<NSDictionary*> *_actions = [RCTConvert NSDictionaryArray:config[@"actions"]];
-        for (NSDictionary *_action in _actions) {
-            CPAlertAction *action = [[CPAlertAction alloc] initWithTitle:[RCTConvert NSString:_action[@"title"]] style:[RCTConvert CPAlertActionStyle:_action[@"style"]] handler:^(CPAlertAction *a) {
-                if (self->hasListeners) {
-                    [self sendEventWithName:@"actionButtonPressed" body:@{@"templateId":templateId, @"id": _action[@"id"] }];
-                }
-            }];
-            [actions addObject:action];
-        }
-        NSArray<NSString*>* titleVariants = [RCTConvert NSArray:config[@"titleVariants"]];
-        CPAlertTemplate *alertTemplate = [[CPAlertTemplate alloc] initWithTitleVariants:titleVariants actions:actions];
-        carPlayTemplate = alertTemplate;
+        // Step 6: migrated to Swift. See templates/RNAutomotiveAlertTemplateBuilder.swift
+        carPlayTemplate = [RNAutomotiveAlertTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
     } else if ([type isEqualToString:@"poi"]) {
         NSString *title = [RCTConvert NSString:config[@"title"]];
         NSMutableArray<__kindof CPPointOfInterest *> * items = [NSMutableArray new];
