@@ -1,0 +1,100 @@
+name: ci/ios
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - dev
+    paths:
+      - 'packages/core/ios/**'
+      - 'packages/core/react-native-automotive.podspec'
+      - 'packages/core/src/specs/**'
+      - 'apps/example/ios/**'
+      - 'apps/example/package.json'
+      - 'package.json'
+      - 'yarn.lock'
+      - '.github/workflows/ci-ios.yml'
+
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      - 'packages/core/ios/**'
+      - 'packages/core/react-native-automotive.podspec'
+      - 'packages/core/src/specs/**'
+      - 'apps/example/ios/**'
+      - 'apps/example/package.json'
+      - 'package.json'
+      - 'yarn.lock'
+      - '.github/workflows/ci-ios.yml'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build example app (iOS Simulator)
+    runs-on: macos-14
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Get Yarn cache directory
+        id: yarn-cache-dir
+        run: echo "dir=$(yarn config get cacheFolder)" >> "$GITHUB_OUTPUT"
+
+      - name: Restore Yarn cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: yarn-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            yarn-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Restore Pods cache
+        uses: actions/cache@v4
+        with:
+          path: apps/example/ios/Pods
+          key: pods-${{ runner.os }}-${{ hashFiles('apps/example/ios/Podfile.lock') }}
+          restore-keys: |
+            pods-${{ runner.os }}-
+
+      - name: Pod install
+        working-directory: apps/example/ios
+        run: pod install --repo-update
+
+      - name: Build (Debug, Simulator)
+        working-directory: apps/example/ios
+        run: |
+          xcodebuild \
+            -workspace RNCarPlayScene.xcworkspace \
+            -scheme RNCarPlayScene \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Upload xcodebuild logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcodebuild-logs
+          path: |
+            ~/Library/Logs/DerivedData/**/Logs/Build/*.xcactivitylog
+          retention-days: 7

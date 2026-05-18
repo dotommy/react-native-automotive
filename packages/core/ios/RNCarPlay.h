@@ -3,7 +3,10 @@
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
 #import "RCTConvert+RNCarPlay.h"
-#import "RNCPStore.h"
+
+// Forward declaration: RNAutomotiveStore lives in Swift and is imported
+// in RNCarPlay.m via the auto-generated `react_native_automotive-Swift.h`.
+@class RNAutomotiveStore;
 
 typedef void(^SearchResultUpdateBlock)(NSArray<CPListItem *> * _Nonnull);
 typedef void(^SelectedResultBlock)(void);

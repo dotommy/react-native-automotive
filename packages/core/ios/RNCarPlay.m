@@ -3,6 +3,15 @@
 #import <React/RCTConvert.h>
 #import <React/RCTRootView.h>
 
+// Auto-generated header exposing Swift classes (RNAutomotiveStore,
+// RNAutomotiveSceneDelegate) to Objective-C. CocoaPods derives the
+// module name from the pod name: react-native-automotive → react_native_automotive.
+#if __has_include("react_native_automotive-Swift.h")
+#import "react_native_automotive-Swift.h"
+#else
+#import <react_native_automotive/react_native_automotive-Swift.h>
+#endif
+
 @implementation RNCarPlay
 {
     bool hasListeners;
@@ -31,7 +40,7 @@
 }
 
 + (void) connectWithInterfaceController:(CPInterfaceController*)interfaceController window:(CPWindow*)window {
-    RNCPStore * store = [RNCPStore sharedManager];
+    RNAutomotiveStore * store = [RNAutomotiveStore sharedManager];
     store.interfaceController = interfaceController;
     store.window = window;
     [store setConnected:true];
@@ -43,7 +52,7 @@
 
 + (void) disconnect {
     RNCarPlay *cp = [RNCarPlay allocWithZone:nil];
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     [store setConnected:false];
     store.window.rootViewController = nil;
 
@@ -135,7 +144,7 @@ RCT_EXPORT_MODULE();
 }
 
 -(UIImage*)dynamicImageWithNormalImage:(UIImage*)normalImage darkImage:(UIImage*)darkImage {
-  RNCPStore *store = [RNCPStore sharedManager];
+  RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     if (normalImage == nil || darkImage == nil) {
         return normalImage ? : darkImage;
     }
@@ -210,15 +219,15 @@ RCT_EXPORT_MODULE();
 }
 
 RCT_EXPORT_METHOD(checkForConnection) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     if ([store isConnected] && hasListeners) {
         [self sendEventWithName:@"didConnect" body:[RNCarPlay getConnectedWindowInformation: store.window]];
     }
 }
 
 RCT_EXPORT_METHOD(createTemplate:(NSString *)templateId config:(NSDictionary*)config callback:(id)callback) {
-    // Get the shared instance of the RNCPStore class
-    RNCPStore *store = [RNCPStore sharedManager];
+    // Get the shared instance of the RNAutomotiveStore class
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
 
     // Extract values from the 'config' dictionary
     NSString *type = [RCTConvert NSString:config[@"type"]];
@@ -440,7 +449,7 @@ RCT_EXPORT_METHOD(createTemplate:(NSString *)templateId config:(NSDictionary*)co
 }
 
 RCT_EXPORT_METHOD(createTrip:(NSString*)tripId config:(NSDictionary*)config) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTrip *trip = [self parseTrip:config];
     NSMutableDictionary *userInfo = trip.userInfo;
     if (!userInfo) {
@@ -453,11 +462,11 @@ RCT_EXPORT_METHOD(createTrip:(NSString*)tripId config:(NSDictionary*)config) {
 }
 
 RCT_EXPORT_METHOD(updateTravelEstimatesForTrip:(NSString*)templateId tripId:(NSString*)tripId travelEstimates:(NSDictionary*)travelEstimates timeRemainingColor:(NSUInteger*)timeRemainingColor) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template) {
         CPMapTemplate *mapTemplate = (CPMapTemplate*) template;
-        CPTrip *trip = [[RNCPStore sharedManager] findTripById:tripId];
+        CPTrip *trip = [[RNAutomotiveStore sharedManager] findTripById:tripId];
         if (trip) {
             CPTravelEstimates *estimates = [self parseTravelEstimates:travelEstimates];
             [mapTemplate updateTravelEstimates:estimates forTrip:trip withTimeRemainingColor:(CPTimeRemainingColor) timeRemainingColor];
@@ -470,11 +479,11 @@ RCT_REMAP_METHOD(startNavigationSession,
                  tripId:(NSString *)tripId
                  startNavigationSessionWithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template) {
         CPMapTemplate *mapTemplate = (CPMapTemplate*) template;
-        CPTrip *trip = [[RNCPStore sharedManager] findTripById:tripId];
+        CPTrip *trip = [[RNAutomotiveStore sharedManager] findTripById:tripId];
         if (trip) {
             CPNavigationSession *navigationSession = [mapTemplate startNavigationSessionForTrip:trip];
             [store setNavigationSession:tripId navigationSession:navigationSession];
@@ -486,7 +495,7 @@ RCT_REMAP_METHOD(startNavigationSession,
 }
 
 RCT_EXPORT_METHOD(updateManeuversNavigationSession:(NSString*)navigationSessionId maneuvers:(NSArray*)maneuvers) {
-    CPNavigationSession* navigationSession = [[RNCPStore sharedManager] findNavigationSessionById:navigationSessionId];
+    CPNavigationSession* navigationSession = [[RNAutomotiveStore sharedManager] findNavigationSessionById:navigationSessionId];
     if (navigationSession) {
         NSMutableArray<CPManeuver*>* upcomingManeuvers = [NSMutableArray array];
         for (NSDictionary *maneuver in maneuvers) {
@@ -497,7 +506,7 @@ RCT_EXPORT_METHOD(updateManeuversNavigationSession:(NSString*)navigationSessionI
 }
 
 RCT_EXPORT_METHOD(updateTravelEstimatesNavigationSession:(NSString*)navigationSessionId maneuverIndex:(NSUInteger)maneuverIndex travelEstimates:(NSDictionary*)travelEstimates) {
-    CPNavigationSession* navigationSession = [[RNCPStore sharedManager] findNavigationSessionById:navigationSessionId];
+    CPNavigationSession* navigationSession = [[RNAutomotiveStore sharedManager] findNavigationSessionById:navigationSessionId];
     if (navigationSession) {
         CPManeuver *maneuver = [[navigationSession upcomingManeuvers] objectAtIndex:maneuverIndex];
         if (maneuver) {
@@ -507,7 +516,7 @@ RCT_EXPORT_METHOD(updateTravelEstimatesNavigationSession:(NSString*)navigationSe
 }
 
 RCT_EXPORT_METHOD(pauseNavigationSession:(NSString*)navigationSessionId reason:(NSUInteger*)reason description:(NSString*)description) {
-    CPNavigationSession* navigationSession = [[RNCPStore sharedManager] findNavigationSessionById:navigationSessionId];
+    CPNavigationSession* navigationSession = [[RNAutomotiveStore sharedManager] findNavigationSessionById:navigationSessionId];
     if (navigationSession) {
         [navigationSession pauseTripForReason:(CPTripPauseReason) reason description:description];
     } else {
@@ -516,7 +525,7 @@ RCT_EXPORT_METHOD(pauseNavigationSession:(NSString*)navigationSessionId reason:(
 }
 
 RCT_EXPORT_METHOD(cancelNavigationSession:(NSString*)navigationSessionId) {
-    CPNavigationSession* navigationSession = [[RNCPStore sharedManager] findNavigationSessionById:navigationSessionId];
+    CPNavigationSession* navigationSession = [[RNAutomotiveStore sharedManager] findNavigationSessionById:navigationSessionId];
     if (navigationSession) {
         [navigationSession cancelTrip];
     } else {
@@ -525,14 +534,14 @@ RCT_EXPORT_METHOD(cancelNavigationSession:(NSString*)navigationSessionId) {
 }
 
 RCT_EXPORT_METHOD(finishNavigationSession:(NSString*)navigationSessionId) {
-    CPNavigationSession* navigationSession = [[RNCPStore sharedManager] findNavigationSessionById:navigationSessionId];
+    CPNavigationSession* navigationSession = [[RNAutomotiveStore sharedManager] findNavigationSessionById:navigationSessionId];
     if (navigationSession) {
         [navigationSession finishTrip];
     }
 }
 
 RCT_EXPORT_METHOD(setRootTemplate:(NSString *)templateId animated:(BOOL)animated) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
 
     store.interfaceController.delegate = self;
@@ -548,7 +557,7 @@ RCT_EXPORT_METHOD(setRootTemplate:(NSString *)templateId animated:(BOOL)animated
 }
 
 RCT_EXPORT_METHOD(pushTemplate:(NSString *)templateId animated:(BOOL)animated) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template) {
         [store.interfaceController pushTemplate:template animated:animated completion:^(BOOL done, NSError * _Nullable err) {
@@ -561,7 +570,7 @@ RCT_EXPORT_METHOD(pushTemplate:(NSString *)templateId animated:(BOOL)animated) {
 }
 
 RCT_EXPORT_METHOD(popToTemplate:(NSString *)templateId animated:(BOOL)animated) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template) {
         [store.interfaceController popToTemplate:template animated:animated completion:^(BOOL done, NSError * _Nullable err) {
@@ -574,7 +583,7 @@ RCT_EXPORT_METHOD(popToTemplate:(NSString *)templateId animated:(BOOL)animated) 
 }
 
 RCT_EXPORT_METHOD(popToRootTemplate:(BOOL)animated) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     [store.interfaceController popToRootTemplateAnimated:animated completion:^(BOOL done, NSError * _Nullable err) {
         NSLog(@"error %@", err);
         // noop
@@ -582,7 +591,7 @@ RCT_EXPORT_METHOD(popToRootTemplate:(BOOL)animated) {
 }
 
 RCT_EXPORT_METHOD(popTemplate:(BOOL)animated) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     [store.interfaceController popTemplateAnimated:animated completion:^(BOOL done, NSError * _Nullable err) {
         NSLog(@"error %@", err);
         // noop
@@ -590,7 +599,7 @@ RCT_EXPORT_METHOD(popTemplate:(BOOL)animated) {
 }
 
 RCT_EXPORT_METHOD(presentTemplate:(NSString *)templateId animated:(BOOL)animated) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template) {
         [store.interfaceController presentTemplate:template animated:animated completion:^(BOOL done, NSError * _Nullable err) {
@@ -603,12 +612,12 @@ RCT_EXPORT_METHOD(presentTemplate:(NSString *)templateId animated:(BOOL)animated
 }
 
 RCT_EXPORT_METHOD(dismissTemplate:(BOOL)animated) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     [store.interfaceController dismissTemplateAnimated:animated];
 }
 
 RCT_EXPORT_METHOD(updateListTemplate:(NSString*)templateId config:(NSDictionary*)config) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template && [template isKindOfClass:[CPListTemplate class]]) {
         CPListTemplate *listTemplate = (CPListTemplate *)template;
@@ -631,7 +640,7 @@ RCT_EXPORT_METHOD(updateListTemplate:(NSString*)templateId config:(NSDictionary*
 }
 
 RCT_EXPORT_METHOD(updateTabBarTemplates:(NSString *)templateId templates:(NSDictionary*)config) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template) {
         CPTabBarTemplate *tabBarTemplate = (CPTabBarTemplate*) template;
@@ -643,7 +652,7 @@ RCT_EXPORT_METHOD(updateTabBarTemplates:(NSString *)templateId templates:(NSDict
 
 
 RCT_EXPORT_METHOD(updateListTemplateSections:(NSString *)templateId sections:(NSArray*)sections) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template) {
         CPListTemplate *listTemplate = (CPListTemplate*) template;
@@ -654,7 +663,7 @@ RCT_EXPORT_METHOD(updateListTemplateSections:(NSString *)templateId sections:(NS
 }
 
 RCT_EXPORT_METHOD(updateListTemplateItem:(NSString *)templateId config:(NSDictionary*)config) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template) {
         CPListTemplate *listTemplate = (CPListTemplate*) template;
@@ -698,7 +707,7 @@ RCT_EXPORT_METHOD(updateListTemplateItem:(NSString *)templateId config:(NSDictio
 }
 
 RCT_EXPORT_METHOD(updateInformationTemplateItems:(NSString *)templateId items:(NSArray*)items) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template) {
         CPInformationTemplate *informationTemplate = (CPInformationTemplate*) template;
@@ -709,7 +718,7 @@ RCT_EXPORT_METHOD(updateInformationTemplateItems:(NSString *)templateId items:(N
 }
 
 RCT_EXPORT_METHOD(updateInformationTemplateActions:(NSString *)templateId items:(NSArray*)actions) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template) {
         CPInformationTemplate *informationTemplate = (CPInformationTemplate*) template;
@@ -722,7 +731,7 @@ RCT_EXPORT_METHOD(updateInformationTemplateActions:(NSString *)templateId items:
 RCT_EXPORT_METHOD(getMaximumListItemCount:(NSString *)templateId
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template) {
         CPListTemplate *listTemplate = (CPListTemplate*) template;
@@ -736,7 +745,7 @@ RCT_EXPORT_METHOD(getMaximumListItemCount:(NSString *)templateId
 RCT_EXPORT_METHOD(getMaximumListItemImageSize:(NSString *)templateId
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template) {
         CPListTemplate *listTemplate = (CPListTemplate*) template;
@@ -754,7 +763,7 @@ RCT_EXPORT_METHOD(getMaximumListItemImageSize:(NSString *)templateId
 RCT_EXPORT_METHOD(getMaximumListSectionCount:(NSString *)templateId
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template) {
         CPListTemplate *listTemplate = (CPListTemplate*) template;
@@ -768,7 +777,7 @@ RCT_EXPORT_METHOD(getMaximumListSectionCount:(NSString *)templateId
 RCT_EXPORT_METHOD(getMaximumNumberOfGridImages:(NSString *)templateId
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template) {
         CPListTemplate *listTemplate = (CPListTemplate*) template;
@@ -782,7 +791,7 @@ RCT_EXPORT_METHOD(getMaximumNumberOfGridImages:(NSString *)templateId
 RCT_EXPORT_METHOD(getMaximumListImageRowItemImageSize:(NSString *)templateId
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     CPTemplate *template = [store findTemplateById:templateId];
     if (template) {
         CPListTemplate *listTemplate = (CPListTemplate*) template;
@@ -798,7 +807,7 @@ RCT_EXPORT_METHOD(getMaximumListImageRowItemImageSize:(NSString *)templateId
 }
 
 RCT_EXPORT_METHOD(updateMapTemplateConfig:(NSString *)templateId config:(NSDictionary*)config) {
-    CPTemplate *template = [[RNCPStore sharedManager] findTemplateById:templateId];
+    CPTemplate *template = [[RNAutomotiveStore sharedManager] findTemplateById:templateId];
     if (template) {
         CPMapTemplate *mapTemplate = (CPMapTemplate*) template;
         [self applyConfigForMapTemplate:mapTemplate templateId:templateId config:config];
@@ -808,7 +817,7 @@ RCT_EXPORT_METHOD(updateMapTemplateConfig:(NSString *)templateId config:(NSDicti
 }
 
 RCT_EXPORT_METHOD(showPanningInterface:(NSString *)templateId animated:(BOOL)animated) {
-    CPTemplate *template = [[RNCPStore sharedManager] findTemplateById:templateId];
+    CPTemplate *template = [[RNAutomotiveStore sharedManager] findTemplateById:templateId];
     if (template) {
         CPMapTemplate *mapTemplate = (CPMapTemplate*) template;
         [mapTemplate showPanningInterfaceAnimated:animated];
@@ -818,7 +827,7 @@ RCT_EXPORT_METHOD(showPanningInterface:(NSString *)templateId animated:(BOOL)ani
 }
 
 RCT_EXPORT_METHOD(dismissPanningInterface:(NSString *)templateId animated:(BOOL)animated) {
-    CPTemplate *template = [[RNCPStore sharedManager] findTemplateById:templateId];
+    CPTemplate *template = [[RNAutomotiveStore sharedManager] findTemplateById:templateId];
     if (template) {
         CPMapTemplate *mapTemplate = (CPMapTemplate*) template;
         [mapTemplate dismissPanningInterfaceAnimated:animated];
@@ -836,7 +845,7 @@ RCT_EXPORT_METHOD(enableNowPlaying:(BOOL)enable) {
 }
 
 RCT_EXPORT_METHOD(hideTripPreviews:(NSString*)templateId) {
-    CPTemplate *template = [[RNCPStore sharedManager] findTemplateById:templateId];
+    CPTemplate *template = [[RNAutomotiveStore sharedManager] findTemplateById:templateId];
     if (template) {
         CPMapTemplate *mapTemplate = (CPMapTemplate*) template;
         [mapTemplate hideTripPreviews];
@@ -844,11 +853,11 @@ RCT_EXPORT_METHOD(hideTripPreviews:(NSString*)templateId) {
 }
 
 RCT_EXPORT_METHOD(showTripPreviews:(NSString*)templateId tripIds:(NSArray*)tripIds tripConfiguration:(NSDictionary*)tripConfiguration) {
-    CPTemplate *template = [[RNCPStore sharedManager] findTemplateById:templateId];
+    CPTemplate *template = [[RNAutomotiveStore sharedManager] findTemplateById:templateId];
     NSMutableArray *trips = [[NSMutableArray alloc] init];
 
     for (NSString *tripId in tripIds) {
-        CPTrip *trip = [[RNCPStore sharedManager] findTripById:tripId];
+        CPTrip *trip = [[RNAutomotiveStore sharedManager] findTripById:tripId];
         if (trip) {
             [trips addObject:trip];
         }
@@ -861,8 +870,8 @@ RCT_EXPORT_METHOD(showTripPreviews:(NSString*)templateId tripIds:(NSArray*)tripI
 }
 
 RCT_EXPORT_METHOD(showRouteChoicesPreviewForTrip:(NSString*)templateId tripId:(NSString*)tripId tripConfiguration:(NSDictionary*)tripConfiguration) {
-    CPTemplate *template = [[RNCPStore sharedManager] findTemplateById:templateId];
-    CPTrip *trip = [[RNCPStore sharedManager] findTripById:tripId];
+    CPTemplate *template = [[RNAutomotiveStore sharedManager] findTemplateById:templateId];
+    CPTrip *trip = [[RNAutomotiveStore sharedManager] findTripById:tripId];
 
     if (template) {
         CPMapTemplate *mapTemplate = (CPMapTemplate*) template;
@@ -871,7 +880,7 @@ RCT_EXPORT_METHOD(showRouteChoicesPreviewForTrip:(NSString*)templateId tripId:(N
 }
 
 RCT_EXPORT_METHOD(presentNavigationAlert:(NSString*)templateId json:(NSDictionary*)json animated:(BOOL)animated) {
-    CPTemplate *template = [[RNCPStore sharedManager] findTemplateById:templateId];
+    CPTemplate *template = [[RNAutomotiveStore sharedManager] findTemplateById:templateId];
     if (template) {
         CPMapTemplate *mapTemplate = (CPMapTemplate*) template;
         [mapTemplate presentNavigationAlert:[self parseNavigationAlert:json templateId:templateId] animated:animated];
@@ -879,7 +888,7 @@ RCT_EXPORT_METHOD(presentNavigationAlert:(NSString*)templateId json:(NSDictionar
 }
 
 RCT_EXPORT_METHOD(dismissNavigationAlert:(NSString*)templateId animated:(BOOL)animated) {
-    CPTemplate *template = [[RNCPStore sharedManager] findTemplateById:templateId];
+    CPTemplate *template = [[RNAutomotiveStore sharedManager] findTemplateById:templateId];
     if (template) {
         CPMapTemplate *mapTemplate = (CPMapTemplate*) template;
         [mapTemplate dismissNavigationAlertAnimated:YES completion:^(BOOL completion) {
@@ -889,7 +898,7 @@ RCT_EXPORT_METHOD(dismissNavigationAlert:(NSString*)templateId animated:(BOOL)an
 }
 
 RCT_EXPORT_METHOD(activateVoiceControlState:(NSString*)templateId identifier:(NSString*)identifier) {
-    CPTemplate *template = [[RNCPStore sharedManager] findTemplateById:templateId];
+    CPTemplate *template = [[RNAutomotiveStore sharedManager] findTemplateById:templateId];
     if (template) {
         CPVoiceControlTemplate *voiceTemplate = (CPVoiceControlTemplate*) template;
         [voiceTemplate activateVoiceControlStateWithIdentifier:identifier];
@@ -913,7 +922,7 @@ RCT_EXPORT_METHOD(reactToSelectedResult:(BOOL)status) {
 }
 
 RCT_EXPORT_METHOD(updateMapTemplateMapButtons:(NSString*) templateId mapButtons:(NSArray*) mapButtonConfig) {
-    CPTemplate *template = [[RNCPStore sharedManager] findTemplateById:templateId];
+    CPTemplate *template = [[RNAutomotiveStore sharedManager] findTemplateById:templateId];
     if (template) {
         CPMapTemplate *mapTemplate = (CPMapTemplate*) template;
         NSArray *mapButtons = [RCTConvert NSArray:mapButtonConfig];
@@ -931,7 +940,7 @@ RCT_EXPORT_METHOD(updateMapTemplateMapButtons:(NSString*) templateId mapButtons:
 # pragma parsers
 
 - (void) applyConfigForMapTemplate:(CPMapTemplate*)mapTemplate templateId:(NSString*)templateId config:(NSDictionary*)config {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
 
     if ([config objectForKey:@"guidanceBackgroundColor"]) {
         [mapTemplate setGuidanceBackgroundColor:[RCTConvert UIColor:config[@"guidanceBackgroundColor"]]];
@@ -985,7 +994,7 @@ RCT_EXPORT_METHOD(updateMapTemplateMapButtons:(NSString*) templateId mapButtons:
 }
 
 - (NSArray<__kindof CPTemplate*>*) parseTemplatesFrom:(NSDictionary*)config {
-    RNCPStore *store = [RNCPStore sharedManager];
+    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
     NSMutableArray<__kindof CPTemplate*> *templates = [NSMutableArray new];
     NSArray<NSDictionary*> *tpls = [RCTConvert NSDictionaryArray:config[@"templates"]];
     for (NSDictionary *tpl in tpls) {
@@ -1147,7 +1156,7 @@ RCT_EXPORT_METHOD(updateMapTemplateMapButtons:(NSString*) templateId mapButtons:
                 
                 [_item setListImageRowHandler:^(CPListImageRowItem * _Nonnull item, NSInteger index, dispatch_block_t  _Nonnull completionBlock) {
                     // Find the current template
-                    RNCPStore *store = [RNCPStore sharedManager];
+                    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
                     CPTemplate *template = [store findTemplateById:templateId];
                     if (template) {
                         [self sendTemplateEventWithName:template name:@"didSelectListItemRowImage" json:@{ @"index": @(listIndex), @"imageIndex": @(index)}];
