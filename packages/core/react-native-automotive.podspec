@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   # side, overriding this URL — so the tag does not need to exist yet.
   s.source       = { :git => 'https://github.com/dotommy/react-native-automotive.git', :tag => "v#{s.version}" }
 
-  s.source_files  = "ios/*.{h,m,swift}"
+  s.source_files  = "ios/**/*.{h,m,swift}"
 
   # DEFINES_MODULE generates the modulemap that:
   # 1. Exposes Swift classes to Obj-C via auto-generated `<PodName>-Swift.h`
