@@ -2,31 +2,33 @@ import CarPlay
 import Foundation
 import React
 
-/// Builds `CPAlertTemplate` instances from JS-side config dictionaries.
+/// Builds `CPActionSheetTemplate` instances from JS-side config dictionaries.
 ///
-/// Config shape (from `src/templates/AlertTemplate.ts`):
+/// Config shape (from `src/templates/ActionSheetTemplate.ts`):
 /// ```
 /// {
-///   titleVariants: [string],
+///   title: string,
+///   message: string,
 ///   actions: [{ id: string, title: string, style: "default" | "cancel" | "destructive" }]
 /// }
 /// ```
 ///
 /// Emits `actionButtonPressed` events with `{ templateId, id }` body when a
-/// CarPlay user taps any action button.
+/// CarPlay user taps any action button (shared parser with AlertTemplate).
 ///
 /// Migrated from inline Objective-C in `RNCarPlay.m`'s `createTemplate:`
 /// dispatch table as part of Step 6 (Obj-C → Swift template builders).
-@objc(RNAutomotiveAlertTemplateBuilder)
+@objc(RNAutomotiveActionSheetTemplateBuilder)
 @objcMembers
-public final class AlertTemplateBuilder: NSObject {
+public final class ActionSheetTemplateBuilder: NSObject {
 
   @objc public static func build(
     config: NSDictionary,
     templateId: String,
     emitter: RCTEventEmitter?
-  ) -> CPAlertTemplate {
-    let titleVariants = (config["titleVariants"] as? [String]) ?? []
+  ) -> CPActionSheetTemplate {
+    let title = config["title"] as? String
+    let message = config["message"] as? String
     let actionsConfig = (config["actions"] as? [NSDictionary]) ?? []
 
     let actions = actionsConfig.map { actionConfig in
@@ -37,6 +39,6 @@ public final class AlertTemplateBuilder: NSObject {
       )
     }
 
-    return CPAlertTemplate(titleVariants: titleVariants, actions: actions)
+    return CPActionSheetTemplate(title: title, message: message, actions: actions)
   }
 }
