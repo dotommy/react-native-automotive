@@ -83,8 +83,15 @@ jobs:
           sed -i '' 's|boostorg.jfrog.io/artifactory/main|archives.boost.io|g' \
             node_modules/react-native/third-party-podspecs/boost.podspec
 
-      - name: Pod install
+      # Flipper (RN 0.71 default) fails to compile on Xcode 15: std::function
+      # template alias resolution differs in the newer libc++, producing errors
+      # like "no template named 'function' in namespace 'std'" and "SocketEventHandler
+      # is not a function or function pointer". Flipper was deprecated in RN 0.73
+      # and removed in 0.74 — disable it via the standard NO_FLIPPER env var.
+      - name: Pod install (Flipper disabled — RN 0.71 + Xcode 15 incompat)
         working-directory: apps/example/ios
+        env:
+          NO_FLIPPER: "1"
         run: pod install --repo-update
 
       - name: Build (Debug, Simulator)
@@ -105,5 +112,7 @@ jobs:
         with:
           name: xcodebuild-logs
           path: |
-            ~/Library/Logs/DerivedData/**/Logs/Build/*.xcactivitylog
+            ~/Library/Developer/Xcode/DerivedData/**/Logs/Build/*.xcactivitylog
+            ~/Library/Developer/Xcode/DerivedData/**/Build/Intermediates.noindex/**/*.dia
           retention-days: 7
+          if-no-files-found: warn
