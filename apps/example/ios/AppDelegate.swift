@@ -2,12 +2,6 @@ import UIKit
 import CarPlay
 import React
 
-#if DEBUG
-#if FB_SONARKIT_ENABLED
-import FlipperKit
-#endif
-#endif
-
 @main
 class AppDelegate: RCTAppDelegate {
 
