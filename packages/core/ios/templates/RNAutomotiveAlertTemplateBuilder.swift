@@ -47,7 +47,7 @@ public final class AlertTemplateBuilder: NSObject {
 
   // MARK: - Private
 
-  private static func parseStyle(_ raw: String?) -> CPAlertActionStyle {
+  private static func parseStyle(_ raw: String?) -> CPAlertAction.Style {
     switch raw {
     case "cancel":      return .cancel
     case "destructive": return .destructive
