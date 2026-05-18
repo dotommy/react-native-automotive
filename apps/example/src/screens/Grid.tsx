@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import { CarPlay, GridTemplate } from 'react-native-carplay';
+import { CarPlay, GridTemplate } from 'react-native-automotive';
 
 export function Grid() {
   const [selected, setSelected] = useState(null);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import { CarPlay, AlertTemplate } from 'react-native-carplay';
+import { CarPlay, AlertTemplate } from 'react-native-automotive';
 
 export function Alert() {
   const [buttonClicked, setButtonClicked] = useState<string>();

@@ -1,4 +1,4 @@
-import { PaneTemplate } from 'react-native-carplay';
+import { PaneTemplate } from 'react-native-automotive';
 
 export const paneTemplate = new PaneTemplate({
   pane: {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import { CarPlay, SearchTemplate } from 'react-native-carplay';
+import { CarPlay, SearchTemplate } from 'react-native-automotive';
 
 export function Search({ navigation }) {
   const [query, setQuery] = useState(null);

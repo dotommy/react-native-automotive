@@ -6,11 +6,11 @@ import {
   Trip,
   NavigationSession,
   MapTemplateConfig,
-} from 'react-native-carplay';
-import { Maneuver } from 'react-native-carplay/src/interfaces/Maneuver';
-import { PauseReason } from 'react-native-carplay/src/interfaces/PauseReason';
-import { TimeRemainingColor } from 'react-native-carplay/src/interfaces/TimeRemainingColor';
-import { TravelEstimates } from 'react-native-carplay/src/interfaces/TravelEstimates';
+} from 'react-native-automotive';
+import { Maneuver } from 'react-native-automotive/src/interfaces/Maneuver';
+import { PauseReason } from 'react-native-automotive/src/interfaces/PauseReason';
+import { TimeRemainingColor } from 'react-native-automotive/src/interfaces/TimeRemainingColor';
+import { TravelEstimates } from 'react-native-automotive/src/interfaces/TravelEstimates';
 
 function MapView() {
   return (

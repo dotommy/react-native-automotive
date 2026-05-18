@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Text, View } from 'react-native';
-import { CarPlay, PointOfInterestTemplate } from 'react-native-carplay';
+import { CarPlay, PointOfInterestTemplate } from 'react-native-automotive';
 
 export function POI() {
   useEffect(() => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Text, View } from 'react-native';
-import { CarPlay } from 'react-native-carplay';
+import { CarPlay } from 'react-native-automotive';
 import { menuTemplate } from './templates/menu.template';
 
 export function AndroidAutoModule() {

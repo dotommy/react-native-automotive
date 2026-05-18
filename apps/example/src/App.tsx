@@ -16,7 +16,7 @@ import { Alert } from './screens/Alert';
 import { Information } from './screens/Information';
 import { NowPlaying } from './screens/NowPlaying';
 import { POI } from './screens/POI';
-import { CarPlay } from 'react-native-carplay';
+import { CarPlay } from 'react-native-automotive';
 
 const Stack = createStackNavigator();
 

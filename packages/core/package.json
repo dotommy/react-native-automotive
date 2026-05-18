@@ -1,7 +1,7 @@
 {
-  "name": "react-native-carplay",
-  "version": "2.4.1-beta.0",
-  "description": "CarPlay for React Native",
+  "name": "react-native-automotive",
+  "version": "0.0.0",
+  "description": "React Native SDK for Apple CarPlay and Android Auto. One API, two platforms, zero compromises.",
   "main": "lib/index.js",
   "react-native": "src/index.ts",
   "source": "src/index.ts",
@@ -10,9 +10,9 @@
     "lib",
     "ios",
     "android",
-    "react-native-carplay.podspec"
+    "react-native-automotive.podspec"
   ],
-  "podspecPath": "./react-native-carplay.podspec",
+  "podspecPath": "./react-native-automotive.podspec",
   "scripts": {
     "prepack": "yarn run build",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
@@ -20,24 +20,16 @@
     "build": "tsc -p tsconfig.build.json",
     "fix-all-files": "eslint . --ext .ts,.tsx,.js,.jsx --fix"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/birkir/react-native-carplay.git"
-  },
   "keywords": [
     "react",
-    "native",
+    "react-native",
     "carplay",
-    "navigation",
+    "android-auto",
+    "automotive",
     "car",
-    "auto"
+    "navigation"
   ],
-  "author": "Birkir Gudjonsson <birkir.gudjonsson@gmail.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/birkir/react-native-carplay/issues"
-  },
-  "homepage": "https://github.com/birkir/react-native-carplay#readme",
   "peerDependencies": {
     "react": "^17.0.2 || ^18.0.0",
     "react-native": "^0.60.0"

@@ -13,8 +13,12 @@
       "path": "apps/docs"
     },
     {
-      "name": "📦 react-native-carplay",
-      "path": "packages/react-native-carplay"
+      "name": "📦 core",
+      "path": "packages/core"
+    },
+    {
+      "name": "🧩 expo-plugin",
+      "path": "packages/expo-plugin"
     },
   ],
   "extensions": {
@@ -41,7 +45,8 @@
     "eslint.workingDirectories": [
       "./apps/example",
       "./apps/docs",
-      "./packages/react-native-carplay"
+      "./packages/core",
+      "./packages/expo-plugin"
     ]
   }
 }

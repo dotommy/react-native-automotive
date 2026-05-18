@@ -1,4 +1,4 @@
-import { CarPlay, GridTemplate } from 'react-native-carplay';
+import { CarPlay, GridTemplate } from 'react-native-automotive';
 import { listTemplate } from './list.template';
 import { gridTemplate } from './grid.template';
 import { searchTemplate } from './search.template';
@@ -40,7 +40,7 @@ export const menuTemplate = new GridTemplate({
       image: gridItemImage,
     },
   ],
-  title: 'Hello from react-native-carplay',
+  title: 'Hello from react-native-automotive',
   onButtonPressed: e => {
     if (e.id === 'List') {
       CarPlay.pushTemplate(listTemplate);

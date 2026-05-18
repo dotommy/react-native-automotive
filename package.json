@@ -1,7 +1,11 @@
 {
-  "name": "root",
+  "name": "react-native-automotive-monorepo",
   "private": true,
   "scripts": {
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean",
     "deps:check": "yarn dlx npm-check-updates@latest --deep --mergeConfig",
     "deps:update": "yarn dlx npm-check-updates@latest -u --deep --mergeConfig",
     "check:install": "yarn dlx @yarnpkg/doctor@3.1.4 ."
@@ -12,8 +16,11 @@
       "apps/*"
     ]
   },
+  "devDependencies": {
+    "turbo": "^2.5.0"
+  },
   "engines": {
-    "node": "^14.13.1 || >=16.0.0",
+    "node": ">=18.0.0",
     "yarn": ">=1.22.0",
     "npm": "please-use-yarn"
   },

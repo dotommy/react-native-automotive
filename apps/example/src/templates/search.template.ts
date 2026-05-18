@@ -1,4 +1,4 @@
-import { CarPlay, SearchTemplate } from 'react-native-carplay';
+import { CarPlay, SearchTemplate } from 'react-native-automotive';
 
 export const searchTemplate = new SearchTemplate({
   headerAction: { type: 'back' },

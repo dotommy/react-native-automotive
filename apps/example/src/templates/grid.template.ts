@@ -1,4 +1,4 @@
-import { CarPlay, GridTemplate } from 'react-native-carplay';
+import { CarPlay, GridTemplate } from 'react-native-automotive';
 
 export const gridTemplate = new GridTemplate({
   buttons: Array.from({ length: 8 }).map((_, i) => ({

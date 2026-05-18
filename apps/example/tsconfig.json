@@ -5,7 +5,7 @@
   },
   "references": [
     {
-      "path": "../../packages/react-native-carplay"
+      "path": "../../packages/core"
     }
   ]
 }
