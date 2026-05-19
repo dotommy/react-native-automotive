@@ -26,5 +26,11 @@
     <meta-data
       android:name="androidx.car.app.minCarApiLevel"
       android:value="1" />
+
+    <!-- Receives taps on notification action buttons (quick_reply + voice).
+         exported=false because we fire it ourselves via PendingIntent. -->
+    <receiver
+      android:name="io.automotive.rn.notifications.AutomotiveNotificationsReceiver"
+      android:exported="false" />
   </application>
 </manifest>

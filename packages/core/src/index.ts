@@ -28,6 +28,10 @@ export * from './CarPlay';
 export * from './navigation/Trip';
 export * from './navigation/NavigationSession';
 
+// Notifications module (Step 8)
+export * from './notifications/AutomotiveNotifications';
+export * from './notifications/types';
+
 // Types
 export * from './interfaces/Action';
 export * from './interfaces/AlertAction';
