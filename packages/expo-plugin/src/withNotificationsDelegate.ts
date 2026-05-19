@@ -18,7 +18,13 @@ import { mergeContents } from '@expo/config-plugins/build/utils/generateCode';
  */
 const TAG = 'react-native-automotive-notifications-delegate';
 const SWIFT_MODULE = 'react_native_automotive';
-const DELEGATE_CLASS = 'RNAutomotiveNotificationsDelegate';
+// Swift class is named `NotificationsDelegate` and exposed to Obj-C
+// via `@objc(RNAutomotiveNotificationsDelegate)`. From Swift code we
+// must use the Swift name (the @objc rename produces a "has been
+// renamed" error when the Obj-C name is used). From Obj-C we use the
+// prefixed Obj-C runtime name.
+const SWIFT_DELEGATE_CLASS = 'NotificationsDelegate';
+const OBJC_DELEGATE_CLASS = 'RNAutomotiveNotificationsDelegate';
 
 export const withNotificationsDelegate: ConfigPlugin = (config) => {
   return withAppDelegate(config, (cfg) => {
@@ -61,7 +67,7 @@ function injectSwift(src: string): string {
   //    multi-line (SDK 53) and inline signature templates.
   return mergeContents({
     src: withImport,
-    newSrc: `    ${DELEGATE_CLASS}.install()`,
+    newSrc: `    ${SWIFT_DELEGATE_CLASS}.install()`,
     anchor: /-> Bool \{/,
     offset: 1,
     tag: `${TAG}-install`,
@@ -86,7 +92,7 @@ function injectObjc(src: string): string {
   //    the signature and the brace, landing inside the body.
   return mergeContents({
     src: withImport,
-    newSrc: `  [${DELEGATE_CLASS} install];`,
+    newSrc: `  [${OBJC_DELEGATE_CLASS} install];`,
     anchor: /didFinishLaunchingWithOptions:/,
     offset: 2,
     tag: `${TAG}-install`,
