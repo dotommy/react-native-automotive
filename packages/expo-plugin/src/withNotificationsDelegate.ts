@@ -52,13 +52,17 @@ function injectSwift(src: string): string {
   }).contents;
 
   // 2) Add the install() call inside didFinishLaunchingWithOptions.
-  //    Expo's Swift AppDelegate template puts the opening `{` on the
-  //    same line as the function signature — offset 1 lands inside
-  //    the body (first executable line).
+  //    Expo SDK 53's AppDelegate splits the function signature across
+  //    multiple lines, ending on `) -> Bool {`. Anchoring on
+  //    `didFinishLaunchingWithOptions` and offset 1 would land us
+  //    INSIDE the signature (between `launchOptions: ...? = nil` and
+  //    `) -> Bool {`), corrupting Swift syntax. Anchor on the line
+  //    that opens the body (`-> Bool {`) instead — works for both
+  //    multi-line (SDK 53) and inline signature templates.
   return mergeContents({
     src: withImport,
     newSrc: `    ${DELEGATE_CLASS}.install()`,
-    anchor: /didFinishLaunchingWithOptions/,
+    anchor: /-> Bool \{/,
     offset: 1,
     tag: `${TAG}-install`,
     comment: '//',
