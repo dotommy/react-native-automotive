@@ -37,7 +37,10 @@ public final class ContactTemplateBuilder: NSObject {
     emitter: RCTEventEmitter?
   ) -> CPContactTemplate {
     let name = config["name"] as? String ?? ""
-    let image = RCTConvert.uiImage(config["image"])
+    // CPContact requires a non-optional UIImage in Swift; the Obj-C call site
+    // could pass nil (silent UB). Fall back to an empty UIImage so the contact
+    // renders with a blank avatar when no image is provided.
+    let image = RCTConvert.uiImage(config["image"]) ?? UIImage()
 
     let contact = CPContact(name: name, image: image)
     contact.subtitle = config["subtitle"] as? String
