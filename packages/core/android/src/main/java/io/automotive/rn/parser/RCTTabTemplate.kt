@@ -14,144 +14,136 @@ import androidx.car.app.model.TabTemplate.TabCallback
 import com.facebook.react.bridge.ReadableMap
 import io.automotive.rn.screens.CarScreenContext
 
+/**
+ * Parses the JS-side `'tab'` template config into an Android-Auto
+ * [TabTemplate] with native semantics: a tab strip at the top of the
+ * screen, each tab references a separate content template by contentId.
+ *
+ * Distinct from [RCTTabBarTemplate] which adapts the CarPlay-flavoured
+ * `'tabbar'` shape (config holds full child template instances).
+ *
+ * Config shape (from `src/templates/android/TabTemplate.ts`):
+ * ```
+ * {
+ *   headerAction: HeaderAction,
+ *   tabs: [{ contentId: string, title: string, icon: ImageSourcePropType }],
+ *   activeTabContentId?: string,
+ *   loading?: boolean
+ * }
+ * ```
+ *
+ * The active tab's content is looked up from the [CarScreenContext]
+ * store by contentId — the JS side must have created that content
+ * template before this TabTemplate.
+ */
 class RCTTabTemplate(
   context: CarContext,
   carScreenContext: CarScreenContext
 ) : RCTTemplate(context, carScreenContext) {
-  private val tabContentsMap = mutableMapOf<String, TabContents>()
-  private val tabInfoMap = mutableMapOf<String, TabInfo>()
-  private var currentTemplate: TabTemplate? = null
-  private var activeTabId: String? = null
-  private var isLoading: Boolean = false
 
-  data class TabInfo(val title: String, val icon: CarIcon, val headerAction: Action)
+  data class TabSpec(val contentId: String, val title: String, val icon: CarIcon)
+
+  private var activeContentId: String? = null
+  private var currentTemplate: TabTemplate? = null
+  private var tabsConfig: List<TabSpec> = emptyList()
+  private var headerAction: Action = Action.APP_ICON
+  private var isLoading: Boolean = false
 
   private val tabCallback = object : TabCallback {
     override fun onTabSelected(tabContentId: String) {
       Log.d(TAG, "Tab selected: $tabContentId")
       eventEmitter.didSelectTemplate(tabContentId)
-      updateContents(tabContentId)
+      activeContentId = tabContentId
+      rebuildAndApply()
     }
   }
 
   override fun parse(props: ReadableMap): TabTemplate {
-    tabInfoMap.clear()
     isLoading = props.isLoading()
-    val builder = TabTemplate.Builder(tabCallback)
-    builder.setLoading(isLoading)
+    headerAction = props.getMap("headerAction")?.let { parseAction(it) } ?: Action.APP_ICON
 
-    props.getArray("templates")?.let { templatesArray ->
-      for (i in 0 until templatesArray.size()) {
-        try {
-          val tabProps = templatesArray.getMap(i)
-          parseTabInfo(tabProps, builder)
-        } catch (e: Exception) {
-          Log.e(TAG, "Error parsing tab at index $i", e)
-        }
-      }
+    tabsConfig = parseTabs(props)
+    activeContentId = props.getString("activeTabContentId")
+      ?: tabsConfig.firstOrNull()?.contentId
 
-      // Set first tab as active
-      tabInfoMap.keys.firstOrNull()?.let { firstTabId ->
-        setActiveTab(builder, firstTabId)
-      }
-    }
-
-    currentTemplate = builder.build()
+    currentTemplate = buildTemplate()
     return currentTemplate!!
   }
 
-  private fun parseTabInfo(tabProps: ReadableMap, builder: TabTemplate.Builder) {
-    val id = tabProps.getString("id") ?: return
-    val tab = parseTab(tabProps)
-    builder.addTab(tab)
+  // MARK: - Building
 
-    val headerAction = tabProps.getMap("headerAction")?.let { parseAction(it) } ?: Action.APP_ICON
-    tabInfoMap[id] = TabInfo(tab.title.toString(), tab.icon, headerAction)
-  }
-
-  private fun setActiveTab(builder: TabTemplate.Builder, tabId: String) {
-    builder.setTabContents(getTabContents(tabId))
-    builder.setActiveTabContentId(tabId)
-    builder.setHeaderAction(tabInfoMap[tabId]?.headerAction ?: Action.APP_ICON)
-    activeTabId = tabId
-  }
-
-  private fun buildCurrentTemplate() {
-    val builder = TabTemplate.Builder(tabCallback).setLoading(isLoading)
-
-    tabInfoMap.forEach { (id, info) ->
-      builder.addTab(Tab.Builder()
-        .setTitle(info.title)
-        .setIcon(info.icon)
-        .setContentId(id)
-        .build())
-    }
-
-    activeTabId?.let { activeId ->
-      setActiveTab(builder, activeId)
-    }
-
-    currentTemplate = builder.build()
-  }
-
-  private fun parseTab(props: ReadableMap): Tab {
-    return Tab.Builder().apply {
-      props.getString("id")?.let { setContentId(it) }
-      val config = props.getMap("config")
-      when {
-        config != null -> {
-          setTitle(config.getString("tabTitle") ?: DEFAULT_TAB_TITLE)
-          setIcon(CarIcon.APP_ICON) // TODO: Parse custom icon if needed
-        }
-        else -> {
-          setTitle(DEFAULT_TAB_TITLE)
-          setIcon(CarIcon.APP_ICON)
-        }
-      }
-    }.build()
-  }
-
-  private fun getTabContents(templateId: String): TabContents {
-    return tabContentsMap.getOrPut(templateId) {
-      val screen = carScreenContext.screens[templateId]
-      val template = screen?.template
-
-      when {
-        template != null -> {
-          Log.d(TAG, "Template found for $templateId: $template")
-          TabContents.Builder(template).build()
-        }
-        else -> createDefaultTabContents(templateId)
+  private fun parseTabs(props: ReadableMap): List<TabSpec> {
+    val tabsArray = props.getArray("tabs") ?: return emptyList()
+    val specs = mutableListOf<TabSpec>()
+    for (i in 0 until tabsArray.size()) {
+      try {
+        val tabMap = tabsArray.getMap(i)
+        val contentId = tabMap.getString("contentId") ?: continue
+        val title = tabMap.getString("title") ?: ""
+        val icon = tabMap.getMap("icon")?.let { parseCarIcon(it) } ?: CarIcon.APP_ICON
+        specs.add(TabSpec(contentId, title, icon))
+      } catch (e: Exception) {
+        Log.e(TAG, "Error parsing tab at index $i", e)
       }
     }
+    return specs
   }
 
-  private fun createDefaultTabContents(templateId: String): TabContents {
-    val defaultItemList = ItemList.Builder()
-      .addItem(Row.Builder().setTitle("No content available for $templateId").build())
-      .build()
-    val defaultTemplate = ListTemplate.Builder()
-      .setTitle(DEFAULT_CONTENT_TITLE)
-      .setSingleList(defaultItemList)
-      .build()
-    return TabContents.Builder(defaultTemplate).build()
+  private fun buildTemplate(): TabTemplate {
+    val builder = TabTemplate.Builder(tabCallback)
+      .setLoading(isLoading)
+      .setHeaderAction(headerAction)
+
+    for (spec in tabsConfig) {
+      builder.addTab(
+        Tab.Builder()
+          .setContentId(spec.contentId)
+          .setTitle(spec.title)
+          .setIcon(spec.icon)
+          .build()
+      )
+    }
+
+    activeContentId?.let { id ->
+      builder.setActiveTabContentId(id)
+      builder.setTabContents(resolveTabContents(id))
+    }
+
+    return builder.build()
   }
 
-  private fun updateContents(tabContentId: String) {
-    Log.d(TAG, "Updating contents for tab: $tabContentId")
-    activeTabId = tabContentId
-    buildCurrentTemplate()
-    // Update the main tab screen with the new template
+  // MARK: - Content lookup
+
+  private fun resolveTabContents(contentId: String): TabContents {
+    val screen = carScreenContext.screens[contentId]
+    val template = screen?.template
+    return if (template != null) {
+      TabContents.Builder(template).build()
+    } else {
+      placeholderTabContents(contentId)
+    }
+  }
+
+  private fun placeholderTabContents(contentId: String): TabContents {
+    val placeholderList = ItemList.Builder()
+      .addItem(Row.Builder().setTitle("No content for $contentId").build())
+      .build()
+    val placeholder = ListTemplate.Builder()
+      .setTitle("Placeholder")
+      .setSingleList(placeholderList)
+      .build()
+    return TabContents.Builder(placeholder).build()
+  }
+
+  private fun rebuildAndApply() {
+    currentTemplate = buildTemplate()
     carScreenContext.screens[carScreenContext.screenMarker]?.apply {
       setTemplate(currentTemplate, carScreenContext.screenMarker, null)
       invalidate()
     }
-    Log.d(TAG, "Template updated for tab $tabContentId")
   }
 
   companion object {
     const val TAG = "RCTTabTemplate"
-    private const val DEFAULT_TAB_TITLE = "Untitled Tab"
-    private const val DEFAULT_CONTENT_TITLE = "Default Content"
   }
 }

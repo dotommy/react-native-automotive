@@ -22,8 +22,14 @@ class TemplateParser internal constructor(
       "route-preview" -> RCTMapTemplate(context, carScreenContext)
       "pane" -> RCTPaneTemplate(context, carScreenContext)
       "search" -> RCTSearchTemplate(context, carScreenContext)
-      "tabbar" -> RCTTabTemplate(context, carScreenContext)
+      // Two distinct tab template parsers:
+      // - 'tabbar': legacy adapter accepting CarPlay-shaped config
+      //   (templates array of full child template instances).
+      // - 'tab': native Android shape (tabs array of {contentId, title, icon}).
+      "tabbar" -> RCTTabBarTemplate(context, carScreenContext)
+      "tab" -> RCTTabTemplate(context, carScreenContext)
       "message" -> RCTMessageTemplate(context, carScreenContext)
+      "sign-in" -> RCTSignInTemplate(context, carScreenContext)
       else -> null
     }
 
