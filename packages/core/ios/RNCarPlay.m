@@ -252,15 +252,8 @@ RCT_EXPORT_METHOD(createTemplate:(NSString *)templateId config:(NSDictionary*)co
         carPlayTemplate = [RNAutomotiveListTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
     }
     else if ([type isEqualToString:@"map"]) {
-        CPMapTemplate *mapTemplate = [[CPMapTemplate alloc] init];
-
-        [self applyConfigForMapTemplate:mapTemplate templateId:templateId config:config];
-        [mapTemplate setLeadingNavigationBarButtons:leadingNavigationBarButtons];
-        [mapTemplate setTrailingNavigationBarButtons:trailingNavigationBarButtons];
-        [mapTemplate setUserInfo:@{ @"templateId": templateId }];
-        mapTemplate.mapDelegate = self;
-
-        carPlayTemplate = mapTemplate;
+        // Step 6: migrated to Swift. See templates/RNAutomotiveMapTemplateBuilder.swift
+        carPlayTemplate = [RNAutomotiveMapTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
     } else if ([type isEqualToString:@"voicecontrol"]) {
         CPVoiceControlTemplate *voiceTemplate = [[CPVoiceControlTemplate alloc] initWithVoiceControlStates: [self parseVoiceControlStates:config[@"voiceControlStates"]]];
         carPlayTemplate = voiceTemplate;
@@ -796,57 +789,9 @@ RCT_EXPORT_METHOD(updateMapTemplateMapButtons:(NSString*) templateId mapButtons:
 # pragma parsers
 
 - (void) applyConfigForMapTemplate:(CPMapTemplate*)mapTemplate templateId:(NSString*)templateId config:(NSDictionary*)config {
-    RNAutomotiveStore *store = [RNAutomotiveStore sharedManager];
-
-    if ([config objectForKey:@"guidanceBackgroundColor"]) {
-        [mapTemplate setGuidanceBackgroundColor:[RCTConvert UIColor:config[@"guidanceBackgroundColor"]]];
-    }
-    else {
-      [mapTemplate setGuidanceBackgroundColor:UIColor.systemGray5Color];
-    }
-    
-    if ([config objectForKey:@"tripEstimateStyle"]) {
-        [mapTemplate setTripEstimateStyle:[RCTConvert CPTripEstimateStyle:config[@"tripEstimateStyle"]]];
-    }
-    else {
-      [mapTemplate setTripEstimateStyle:CPTripEstimateStyleDark];
-    }
-
-    if ([config objectForKey:@"leadingNavigationBarButtons"]){
-        NSArray *leadingNavigationBarButtons = [self parseBarButtons:[RCTConvert NSArray:config[@"leadingNavigationBarButtons"]] templateId:templateId];
-        [mapTemplate setLeadingNavigationBarButtons:leadingNavigationBarButtons];
-    }
-  
-    if ([config objectForKey:@"trailingNavigationBarButtons"]){
-        NSArray *trailingNavigationBarButtons = [self parseBarButtons:[RCTConvert NSArray:config[@"trailingNavigationBarButtons"]] templateId:templateId];
-        [mapTemplate setTrailingNavigationBarButtons:trailingNavigationBarButtons];
-    }
-
-    if ([config objectForKey:@"mapButtons"]) {
-        NSArray *mapButtons = [RCTConvert NSArray:config[@"mapButtons"]];
-        NSMutableArray *result = [NSMutableArray array];
-        for (NSDictionary *mapButton in mapButtons) {
-            NSString *_id = [mapButton objectForKey:@"id"];
-            [result addObject:[RCTConvert CPMapButton:mapButton withHandler:^(CPMapButton * _Nonnull mapButton) {
-                [self sendTemplateEventWithName:mapTemplate name:@"mapButtonPressed" json:@{ @"id": _id }];
-            }]];
-        }
-        [mapTemplate setMapButtons:result];
-    }
-
-    if ([config objectForKey:@"automaticallyHidesNavigationBar"]) {
-        [mapTemplate setAutomaticallyHidesNavigationBar:[RCTConvert BOOL:config[@"automaticallyHidesNavigationBar"]]];
-    }
-
-    if ([config objectForKey:@"hidesButtonsWithNavigationBar"]) {
-        [mapTemplate setHidesButtonsWithNavigationBar:[RCTConvert BOOL:config[@"hidesButtonsWithNavigationBar"]]];
-    }
-
-    if ([config objectForKey:@"render"]) {
-        RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:self.bridge moduleName:templateId initialProperties:@{}];
-        RNCarPlayViewController *viewController = [[RNCarPlayViewController alloc] initWithRootView:rootView];
-        store.window.rootViewController = viewController;
-    }
+    // Step 6: single source of truth lives in Swift now.
+    // Wrapper kept so the legacy updateMapTemplateConfig RCT method keeps working.
+    [RNAutomotiveMapTemplateBuilder applyConfigWithMapTemplate:mapTemplate templateId:templateId config:config emitter:self];
 }
 
 - (NSArray<__kindof CPTemplate*>*) parseTemplatesFrom:(NSDictionary*)config {
