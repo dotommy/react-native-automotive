@@ -29,6 +29,15 @@ module.exports = {
       package: 'io.automotive.rn.example',
     },
     plugins: [
+      // Pin Kotlin to 1.9.25 so the Compose Compiler shipped with
+      // expo-modules-core 2.2.3 matches (Expo SDK 52 default of
+      // 1.9.24 is too old, build fails with a compatibility error).
+      [
+        'expo-build-properties',
+        {
+          android: { kotlinVersion: '1.9.25' },
+        },
+      ],
       [
         'react-native-automotive-expo-plugin',
         {
