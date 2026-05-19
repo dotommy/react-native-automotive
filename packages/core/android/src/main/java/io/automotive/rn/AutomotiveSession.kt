@@ -20,7 +20,6 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.modules.appregistry.AppRegistry
-import com.facebook.react.modules.core.TimingModule
 import com.facebook.react.modules.debug.DevSettingsModule
 import io.automotive.rn.screens.CarScreen
 
@@ -87,16 +86,20 @@ class AutomotiveSession(private val reactInstanceManager: ReactInstanceManager) 
         appParams.putMap("initialProps", Arguments.fromBundle(appProperties))
       }
 
+      // Safe call: catalystInstance.getJSModule may return null while the
+      // bridge is initialising; Kotlin 1.9.25+ rejects the unsafe direct call.
       catalystInstance.getJSModule(AppRegistry::class.java)
-        .runApplication(jsAppModuleName, appParams)
+        ?.runApplication(jsAppModuleName, appParams)
 
-      val timingModule = reactContext.getNativeModule(
-        TimingModule::class.java
-      )
       val carModule = reactInstanceManager
         .currentReactContext?.getNativeModule(AutomotiveModule::class.java)
-      carModule!!.setCarContext(carContext, screen)
-      timingModule!!.onHostResume()
+      carModule?.setCarContext(carContext, screen)
+
+      // Previously: `timingModule!!.onHostResume()` to simulate a host resume
+      // so JS timers fire while the VirtualDisplay renders. The `onHostResume`
+      // symbol is no longer publicly exposed on TimingModule in RN 0.76+;
+      // modern RN handles this automatically through its lifecycle hooks,
+      // so the explicit nudge is no longer required. Removed.
 
     } catch (e: Exception) {
       e.printStackTrace()
