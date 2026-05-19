@@ -55,7 +55,7 @@ public final class ListItemImageLoader: NSObject {
           return
         }
         newImages[index] = image
-        rowItem.updateImages(newImages)
+        rowItem.update(newImages)
       }
     }.resume()
   }
