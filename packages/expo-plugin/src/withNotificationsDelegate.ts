@@ -38,10 +38,14 @@ export const withNotificationsDelegate: ConfigPlugin = (config) => {
 
 function injectSwift(src: string): string {
   // 1) Add `import react_native_automotive` near the top.
+  //    Expo SDK 53 changed the AppDelegate Swift template — it now
+  //    inherits ExpoAppDelegate and the first imports are `import Expo`
+  //    / `import React`, not `import UIKit`. Anchor on `import Expo`
+  //    which is consistently first in modern templates.
   const withImport = mergeContents({
     src,
     newSrc: `import ${SWIFT_MODULE}`,
-    anchor: /^import UIKit/m,
+    anchor: /^import Expo/m,
     offset: 1,
     tag: `${TAG}-import`,
     comment: '//',

@@ -77,7 +77,7 @@ class RCTTabTemplate(
     val specs = mutableListOf<TabSpec>()
     for (i in 0 until tabsArray.size()) {
       try {
-        val tabMap = tabsArray.getMap(i)
+        val tabMap = tabsArray.getMap(i) ?: continue
         val contentId = tabMap.getString("contentId") ?: continue
         val title = tabMap.getString("title") ?: ""
         val icon = tabMap.getMap("icon")?.let { parseCarIcon(it) } ?: CarIcon.APP_ICON

@@ -104,7 +104,7 @@ class AutomotiveNotificationsModule(
       val actionsArray = if (config.hasKey("actions")) config.getArray("actions") else null
       if (actionsArray != null) {
         for (i in 0 until actionsArray.size()) {
-          val actionConfig = actionsArray.getMap(i)
+          val actionConfig = actionsArray.getMap(i) ?: continue
           buildAction(actionConfig, notificationId)?.let { builder.addAction(it) }
         }
       }

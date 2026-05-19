@@ -35,7 +35,7 @@ class RCTListTemplate(
       // Sections
       props.getArray("sections")?.let {
         for (i in 0 until it.size()) {
-          val section = it.getMap(i)
+          val section = it.getMap(i) ?: continue
           val header = section.getString("header")
           addSectionedList(
             SectionedItemList.create(

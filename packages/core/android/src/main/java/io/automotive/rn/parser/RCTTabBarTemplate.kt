@@ -43,7 +43,7 @@ class RCTTabBarTemplate(
     props.getArray("templates")?.let { templatesArray ->
       for (i in 0 until templatesArray.size()) {
         try {
-          val tabProps = templatesArray.getMap(i)
+          val tabProps = templatesArray.getMap(i) ?: continue
           parseTabInfo(tabProps, builder)
         } catch (e: Exception) {
           Log.e(TAG, "Error parsing tab at index $i", e)
