@@ -130,7 +130,7 @@ public final class ListTemplateBuilder: NSObject {
   // MARK: - Assistant enum parsers (iOS 15+)
 
   @available(iOS 15.0, *)
-  private static func parseAssistantPosition(_ raw: String?) -> CPAssistantCellPosition {
+  private static func parseAssistantPosition(_ raw: String?) -> CPListItem.AssistantCellPosition {
     switch raw {
     case "bottom": return .bottom
     default:       return .top
@@ -138,7 +138,7 @@ public final class ListTemplateBuilder: NSObject {
   }
 
   @available(iOS 15.0, *)
-  private static func parseAssistantVisibility(_ raw: String?) -> CPAssistantCellVisibility {
+  private static func parseAssistantVisibility(_ raw: String?) -> CPListItem.AssistantCellVisibility {
     switch raw {
     case "always":  return .always
     case "limited": return .whileLimitedUIActive
@@ -147,7 +147,7 @@ public final class ListTemplateBuilder: NSObject {
   }
 
   @available(iOS 15.0, *)
-  private static func parseAssistantActionType(_ raw: String?) -> CPAssistantCellActionType {
+  private static func parseAssistantActionType(_ raw: String?) -> CPListItem.AssistantCellActionType {
     switch raw {
     case "playMedia": return .playMedia
     default:          return .startCall
@@ -156,7 +156,7 @@ public final class ListTemplateBuilder: NSObject {
 
   // Wrapper to keep call site clean even when caller doesn't gate on iOS 15.
   @available(iOS 15.0, *)
-  private static func parseAssistantAction(_ raw: String?) -> CPAssistantCellActionType {
+  private static func parseAssistantAction(_ raw: String?) -> CPListItem.AssistantCellActionType {
     parseAssistantActionType(raw)
   }
 }
