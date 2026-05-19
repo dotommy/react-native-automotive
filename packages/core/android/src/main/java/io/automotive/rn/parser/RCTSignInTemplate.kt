@@ -3,17 +3,17 @@ package io.automotive.rn.parser
 import android.net.Uri
 import androidx.car.app.CarContext
 import androidx.car.app.model.Action
+import androidx.car.app.model.InputCallback
 import androidx.car.app.model.signin.InputSignInMethod
 import androidx.car.app.model.signin.PinSignInMethod
 import androidx.car.app.model.signin.ProviderSignInMethod
 import androidx.car.app.model.signin.QRCodeSignInMethod
-import androidx.car.app.model.signin.SignInMethod
 import androidx.car.app.model.signin.SignInTemplate
 import com.facebook.react.bridge.ReadableMap
 import io.automotive.rn.screens.CarScreenContext
 
 /**
- * Parses the JS-side `'sign-in'` template config into a CarPlay/Android-Auto
+ * Parses the JS-side `'sign-in'` template config into an Android-Auto
  * [SignInTemplate]. Required for any account-based app on Android Auto
  * (music streaming, navigation with sync, EV charging, parking, etc.).
  *
@@ -30,8 +30,10 @@ import io.automotive.rn.screens.CarScreenContext
  * }
  * ```
  *
- * The four sign-in methods carry their own params (pin string, input
- * hints, OAuth provider action, QR code URL).
+ * API note: the marker interface for sign-in methods is
+ * `SignInTemplate.SignInMethod` (nested), and the input callback type is
+ * `androidx.car.app.model.InputCallback` (top-level in the model package,
+ * not in the signin subpackage).
  */
 class RCTSignInTemplate(
   context: CarContext,
@@ -42,7 +44,16 @@ class RCTSignInTemplate(
     val methodConfig = props.getMap("signInMethod")
       ?: throw IllegalArgumentException("SignInTemplate requires signInMethod")
 
-    val builder = SignInTemplate.Builder(parseSignInMethod(methodConfig))
+    // SignInTemplate.Builder accepts a SignInTemplate.SignInMethod; Kotlin
+    // upcasts the concrete subclasses automatically.
+    val builder = when (val type = methodConfig.getString("type")) {
+      "pin"      -> SignInTemplate.Builder(parsePinMethod(methodConfig))
+      "input"    -> SignInTemplate.Builder(parseInputMethod(methodConfig))
+      "provider" -> SignInTemplate.Builder(parseProviderMethod(methodConfig))
+      "qrcode"   -> SignInTemplate.Builder(parseQrCodeMethod(methodConfig))
+      else       -> throw IllegalArgumentException("Unknown sign-in method type: $type")
+    }
+
     builder.setLoading(props.isLoading())
 
     props.getString("title")?.let { builder.setTitle(it) }
@@ -59,17 +70,7 @@ class RCTSignInTemplate(
     return builder.build()
   }
 
-  // MARK: - Sign-in method dispatch
-
-  private fun parseSignInMethod(map: ReadableMap): SignInMethod {
-    return when (val type = map.getString("type")) {
-      "pin"      -> parsePinMethod(map)
-      "input"    -> parseInputMethod(map)
-      "provider" -> parseProviderMethod(map)
-      "qrcode"   -> parseQrCodeMethod(map)
-      else       -> throw IllegalArgumentException("Unknown sign-in method type: $type")
-    }
-  }
+  // MARK: - Concrete sign-in method parsers
 
   private fun parsePinMethod(map: ReadableMap): PinSignInMethod {
     val pin = map.getString("pin") ?: ""
@@ -77,18 +78,10 @@ class RCTSignInTemplate(
   }
 
   private fun parseInputMethod(map: ReadableMap): InputSignInMethod {
-    // TODO: wire onInputTextChanged / onInputSubmitted events when the
-    // EventEmitter gains dedicated `signInInput*` event types. The TS
-    // surface already declares these callbacks but the bridge transport
-    // isn't connected yet — handler stubs for now.
-    val callback = object : InputSignInMethod.InputCallback {
-      override fun onInputSubmitted(text: String) {
-        // no-op stub
-      }
-      override fun onInputTextChanged(text: String) {
-        // no-op stub
-      }
-    }
+    // InputCallback has default impls for onInputSubmitted / onInputTextChanged
+    // — an empty object inherits them. Wire to RN events in a follow-up
+    // commit when EventEmitter gains dedicated sign-in input events.
+    val callback = object : InputCallback {}
     val hint = map.getString("hint") ?: ""
     val builder = InputSignInMethod.Builder(callback)
     builder.setHint(hint)
@@ -107,7 +100,8 @@ class RCTSignInTemplate(
 
   private fun parseQrCodeMethod(map: ReadableMap): QRCodeSignInMethod {
     val url = map.getString("url") ?: ""
-    return QRCodeSignInMethod.Builder(Uri.parse(url)).build()
+    // Constructor-based: QRCodeSignInMethod has no Builder.
+    return QRCodeSignInMethod(Uri.parse(url))
   }
 
   // MARK: - InputSignInMethod enum mapping
