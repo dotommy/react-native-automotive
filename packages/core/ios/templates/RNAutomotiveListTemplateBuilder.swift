@@ -147,7 +147,7 @@ public final class ListTemplateBuilder: NSObject {
   }
 
   @available(iOS 15.0, *)
-  private static func parseAssistantActionType(_ raw: String?) -> CPListItem.AssistantCellActionType {
+  private static func parseAssistantActionType(_ raw: String?) -> CPAssistantCellActionType {
     switch raw {
     case "playMedia": return .playMedia
     default:          return .startCall
@@ -156,7 +156,7 @@ public final class ListTemplateBuilder: NSObject {
 
   // Wrapper to keep call site clean even when caller doesn't gate on iOS 15.
   @available(iOS 15.0, *)
-  private static func parseAssistantAction(_ raw: String?) -> CPListItem.AssistantCellActionType {
+  private static func parseAssistantAction(_ raw: String?) -> CPAssistantCellActionType {
     parseAssistantActionType(raw)
   }
 }
