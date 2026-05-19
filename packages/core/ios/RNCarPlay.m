@@ -265,49 +265,8 @@ RCT_EXPORT_METHOD(createTemplate:(NSString *)templateId config:(NSDictionary*)co
         CPVoiceControlTemplate *voiceTemplate = [[CPVoiceControlTemplate alloc] initWithVoiceControlStates: [self parseVoiceControlStates:config[@"voiceControlStates"]]];
         carPlayTemplate = voiceTemplate;
     } else if ([type isEqualToString:@"nowplaying"]) {
-        CPNowPlayingTemplate *nowPlayingTemplate = [CPNowPlayingTemplate sharedTemplate];
-        [nowPlayingTemplate setAlbumArtistButtonEnabled:[RCTConvert BOOL:config[@"albumArtistButtonEnabled"]]];
-        [nowPlayingTemplate setUpNextTitle:[RCTConvert NSString:config[@"upNextButtonTitle"]]];
-        [nowPlayingTemplate setUpNextButtonEnabled:[RCTConvert BOOL:config[@"upNextButtonEnabled"]]];
-        NSMutableArray<CPNowPlayingButton *> *buttons = [NSMutableArray new];
-        NSArray<NSDictionary*> *_buttons = [RCTConvert NSDictionaryArray:config[@"buttons"]];
-        
-        NSDictionary *buttonTypeMapping = @{
-            @"shuffle": CPNowPlayingShuffleButton.class,
-            @"add-to-library": CPNowPlayingAddToLibraryButton.class,
-            @"more": CPNowPlayingMoreButton.class,
-            @"playback": CPNowPlayingPlaybackRateButton.class,
-            @"repeat": CPNowPlayingRepeatButton.class,
-            @"image": CPNowPlayingImageButton.class
-        };
-        
-        for (NSDictionary *_button in _buttons) {
-            NSString *buttonType = [RCTConvert NSString:_button[@"type"]];
-            NSDictionary *body = @{@"templateId":templateId, @"id": _button[@"id"] };
-            Class buttonClass = buttonTypeMapping[buttonType];
-            if (buttonClass) {
-                CPNowPlayingButton *button;
-                
-                if ([buttonType isEqualToString:@"image"]) {
-                    UIImage *_image = [RCTConvert UIImage:[_button objectForKey:@"image"]];
-                    button = [[CPNowPlayingImageButton alloc] initWithImage:_image handler:^(__kindof CPNowPlayingImageButton * _Nonnull) {
-                        if (self->hasListeners) {
-                            [self sendEventWithName:@"buttonPressed" body:body];
-                        }
-                    }];
-                } else {
-                    button = [[buttonClass alloc] initWithHandler:^(__kindof CPNowPlayingButton * _Nonnull) {
-                        if (self->hasListeners) {
-                            [self sendEventWithName:@"buttonPressed" body:body];
-                        }
-                    }];
-                }
-                
-                [buttons addObject:button];
-            }
-        }
-        [nowPlayingTemplate updateNowPlayingButtons:buttons];
-        carPlayTemplate = nowPlayingTemplate;
+        // Step 6: migrated to Swift. See templates/RNAutomotiveNowPlayingTemplateBuilder.swift
+        carPlayTemplate = [RNAutomotiveNowPlayingTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
     } else if ([type isEqualToString:@"tabbar"]) {
         CPTabBarTemplate *tabBarTemplate = [[CPTabBarTemplate alloc] initWithTemplates:[self parseTemplatesFrom:config]];
         tabBarTemplate.delegate = self;
