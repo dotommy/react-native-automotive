@@ -110,7 +110,9 @@ class AutomotiveNotificationsModule(
       }
 
       // Add CarAppExtender so the notification surfaces on Android Auto.
-      CarAppExtender.Builder().extend(builder)
+      // The extend() method lives on NotificationCompat.Builder, not on
+      // the CarAppExtender itself.
+      builder.extend(CarAppExtender.Builder().build())
 
       val notification = builder.build()
       val notificationIdInt = notificationId.hashCode()

@@ -176,11 +176,12 @@ public final class NotificationsModule: RCTEventEmitter {
     notificationId: String
   ) -> INSendMessageIntent {
     let handle = INPersonHandle(value: notificationId, type: .unknown)
+    let avatarInImage = inImage(from: senderAvatar)
     let sender = INPerson(
       personHandle: handle,
       nameComponents: nil,
       displayName: senderName,
-      image: senderAvatar.map { INImage(uiImage: $0) },
+      image: avatarInImage,
       contactIdentifier: nil,
       customIdentifier: nil
     )
@@ -195,10 +196,16 @@ public final class NotificationsModule: RCTEventEmitter {
       sender: sender,
       attachments: nil
     )
-    if let avatar = senderAvatar {
-      intent.setImage(INImage(uiImage: avatar), forParameterNamed: \INSendMessageIntent.sender)
+    if let avatarInImage = avatarInImage {
+      intent.setImage(avatarInImage, forParameterNamed: \INSendMessageIntent.sender)
     }
     return intent
+  }
+
+  /// `INImage` has no `init(uiImage:)` in the standard SDK — wrap via PNG data.
+  private func inImage(from image: UIImage?) -> INImage? {
+    guard let data = image?.pngData() else { return nil }
+    return INImage(imageData: data)
   }
 }
 
