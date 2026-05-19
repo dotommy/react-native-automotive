@@ -36,7 +36,12 @@ on:
 jobs:
   build:
     name: Build example app (iOS Simulator)
-    runs-on: macos-14
+    # macos-15 ships Xcode 16 as default. Expo SDK 52 + RN 0.76.x
+    # require Xcode 16+: expo-modules-core@2.2.3 uses C++ libc++
+    # template features (compressed_pair, construct_at) that Xcode
+    # 15.4's libc++ rejects with "TestingSyncJSCallInvoker is an
+    # abstract class" errors in EXJavaScriptRuntime.mm.
+    runs-on: macos-15
     timeout-minutes: 30
 
     steps:
