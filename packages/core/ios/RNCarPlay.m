@@ -281,20 +281,8 @@ RCT_EXPORT_METHOD(createTemplate:(NSString *)templateId config:(NSDictionary*)co
         // Step 6: migrated to Swift. See templates/RNAutomotiveAlertTemplateBuilder.swift
         carPlayTemplate = [RNAutomotiveAlertTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
     } else if ([type isEqualToString:@"poi"]) {
-        NSString *title = [RCTConvert NSString:config[@"title"]];
-        NSMutableArray<__kindof CPPointOfInterest *> * items = [NSMutableArray new];
-        NSUInteger selectedIndex = 0;
-
-        NSArray<NSDictionary*> *_items = [RCTConvert NSDictionaryArray:config[@"items"]];
-        for (NSDictionary *_item in _items) {
-            CPPointOfInterest *poi = [RCTConvert CPPointOfInterest:_item];
-            [poi setUserInfo:_item];
-            [items addObject:poi];
-        }
-
-        CPPointOfInterestTemplate *poiTemplate = [[CPPointOfInterestTemplate alloc] initWithTitle:title pointsOfInterest:items selectedIndex:selectedIndex];
-        poiTemplate.pointOfInterestDelegate = self;
-        carPlayTemplate = poiTemplate;
+        // Step 6: migrated to Swift. See templates/RNAutomotivePointOfInterestTemplateBuilder.swift
+        carPlayTemplate = [RNAutomotivePointOfInterestTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
     } else if ([type isEqualToString:@"information"]) {
         // Step 6: migrated to Swift. See templates/RNAutomotiveInformationTemplateBuilder.swift
         carPlayTemplate = [RNAutomotiveInformationTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
