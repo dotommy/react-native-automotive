@@ -9,8 +9,8 @@ on:
     paths:
       - 'packages/core/android/**'
       - 'packages/core/src/specs/**'
-      - 'apps/example/android/**'
-      - 'apps/example/package.json'
+      - 'packages/expo-plugin/**'
+      - 'apps/example/**'
       - 'package.json'
       - 'yarn.lock'
       - '.github/workflows/ci-android.yml'
@@ -23,8 +23,8 @@ on:
     paths:
       - 'packages/core/android/**'
       - 'packages/core/src/specs/**'
-      - 'apps/example/android/**'
-      - 'apps/example/package.json'
+      - 'packages/expo-plugin/**'
+      - 'apps/example/**'
       - 'package.json'
       - 'yarn.lock'
       - '.github/workflows/ci-android.yml'
@@ -69,6 +69,21 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --immutable
+
+      # Build the TS packages so the plugin's lib/ exists before
+      # `expo prebuild` requires it via `app.plugin.js`.
+      - name: Build TS packages
+        run: |
+          yarn turbo run build \
+            --filter=react-native-automotive \
+            --filter=react-native-automotive-expo-plugin
+
+      # Generate android/ via expo prebuild — this is also where the
+      # react-native-automotive-expo-plugin runs (AndroidManifest
+      # uses-permission entries for androidx.car.app.*).
+      - name: Expo prebuild (Android)
+        working-directory: apps/example
+        run: npx expo prebuild --platform android --no-install
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3

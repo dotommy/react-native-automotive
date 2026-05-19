@@ -1,23 +1,20 @@
-/**
- * Metro configuration for React Native
- * https://github.com/facebook/react-native
- *
- * @format
- */
+// Monorepo-aware Metro config for the example app.
+// Watches the workspace root so changes to packages/core or
+// packages/expo-plugin trigger reloads, and resolves modules through
+// both the local and root node_modules.
+const { getDefaultConfig } = require('expo/metro-config');
 const path = require('path');
-const nm = ['node', 'modules'].join('_');
 
-module.exports = {
-  transformer: {
-    getTransformOptions: async () => ({
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: true,
-      },
-    }),
-  },
-  watchFolders: [
-    path.resolve(__dirname, '../../', nm),
-    path.resolve(__dirname, '../../packages/core'),
-  ],
-};
+const projectRoot = __dirname;
+const workspaceRoot = path.resolve(projectRoot, '../..');
+
+const config = getDefaultConfig(projectRoot);
+
+config.watchFolders = [workspaceRoot];
+config.resolver.nodeModulesPaths = [
+  path.resolve(projectRoot, 'node_modules'),
+  path.resolve(workspaceRoot, 'node_modules'),
+];
+config.resolver.disableHierarchicalLookup = true;
+
+module.exports = config;

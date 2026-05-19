@@ -10,8 +10,8 @@ on:
       - 'packages/core/ios/**'
       - 'packages/core/react-native-automotive.podspec'
       - 'packages/core/src/specs/**'
-      - 'apps/example/ios/**'
-      - 'apps/example/package.json'
+      - 'packages/expo-plugin/**'
+      - 'apps/example/**'
       - 'package.json'
       - 'yarn.lock'
       - '.github/workflows/ci-ios.yml'
@@ -25,8 +25,8 @@ on:
       - 'packages/core/ios/**'
       - 'packages/core/react-native-automotive.podspec'
       - 'packages/core/src/specs/**'
-      - 'apps/example/ios/**'
-      - 'apps/example/package.json'
+      - 'packages/expo-plugin/**'
+      - 'apps/example/**'
       - 'package.json'
       - 'yarn.lock'
       - '.github/workflows/ci-ios.yml'
@@ -66,6 +66,21 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      # Build the TS packages so the plugin's lib/ exists before
+      # `expo prebuild` requires it via `app.plugin.js`.
+      - name: Build TS packages
+        run: |
+          yarn turbo run build \
+            --filter=react-native-automotive \
+            --filter=react-native-automotive-expo-plugin
+
+      # Generate ios/ via expo prebuild — this is also where the
+      # react-native-automotive-expo-plugin runs (Info.plist scene config,
+      # Entitlements, AppDelegate notifications delegate install).
+      - name: Expo prebuild (iOS)
+        working-directory: apps/example
+        run: npx expo prebuild --platform ios --no-install
+
       - name: Restore Pods cache
         uses: actions/cache@v4
         with:
@@ -74,32 +89,18 @@ jobs:
           restore-keys: |
             pods-${{ runner.os }}-
 
-      # RN 0.71 ships a boost.podspec pointing to boostorg.jfrog.io which
-      # serves an inconsistent archive (checksum mismatch). Patch the URL
-      # to the stable archives.boost.io mirror before pod install.
-      # Remove when example app is bumped to RN 0.76+ at Step 10.
-      - name: Patch boost.podspec (RN 0.71 jfrog mirror is broken)
-        run: |
-          sed -i '' 's|boostorg.jfrog.io/artifactory/main|archives.boost.io|g' \
-            node_modules/react-native/third-party-podspecs/boost.podspec
-
-      # Flipper (RN 0.71 default) fails to compile on Xcode 15: std::function
-      # template alias resolution differs in the newer libc++, producing errors
-      # like "no template named 'function' in namespace 'std'" and "SocketEventHandler
-      # is not a function or function pointer". Flipper was deprecated in RN 0.73
-      # and removed in 0.74 — disable it via the standard NO_FLIPPER env var.
-      - name: Pod install (Flipper disabled — RN 0.71 + Xcode 15 incompat)
+      - name: Pod install
         working-directory: apps/example/ios
-        env:
-          NO_FLIPPER: "1"
-        run: pod install --repo-update
+        run: pod install
 
       - name: Build (Debug, Simulator)
         working-directory: apps/example/ios
         run: |
+          # Workspace + scheme names are derived from the app's `name` in
+          # app.config.js (CarPlayExample → CarPlayExample.xcworkspace).
           xcodebuild \
-            -workspace RNCarPlayScene.xcworkspace \
-            -scheme RNCarPlayScene \
+            -workspace CarPlayExample.xcworkspace \
+            -scheme CarPlayExample \
             -configuration Debug \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \

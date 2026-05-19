@@ -1,195 +1,47 @@
-# Using SceneDelegate with React Native
+# react-native-automotive — example app
 
-We will be swapping out the ObjC AppDelegate code with an Swift variant for SceneDelegate.
+Minimal Expo bare workflow demo for `react-native-automotive` v1.
+Demonstrates the wiring chain: JS template constructor → native bridge
+→ CarPlay / Android Auto scene → display on the car head unit.
 
-The Project name in this example is `Example`, which you should replace with your own project name.
+## What is in here
 
-### 1. Remove previous ObjC files
+A single `ListTemplate` set as the CarPlay root template when the
+phone connects to a head unit. Enough to prove the plugin + native
+modules + JS API all line up.
 
-- Delete `main.m`
-- Delete `AppDelegate.h` and `AppDelegate.mm`
+For richer demos covering every template + the notifications module,
+see the JSDoc on each `*Template` class in
+[`packages/core/src/templates/`](../../packages/core/src/templates/).
 
-### 2. Create the new Swift AppDelegate
+## Running locally (requires macOS for iOS)
 
-Create a new `AppDelegate.swift` file, once prompted, click *Create bridging headers for Swift*.
+From the **monorepo root**:
 
-Paste the following code to the `AppDelegate.swift`, it includes Flipper code.
+```bash
+# Install workspace deps + build the TS packages (core + plugin)
+yarn install
+yarn turbo run build --filter=react-native-automotive --filter=react-native-automotive-expo-plugin
 
-```swift
-// ios/AppDelegate.swift
-import UIKit
-import CarPlay
-import React
-#if DEBUG
-#if FB_SONARKIT_ENABLED
-import FlipperKit
-#endif
-#endif
+# Generate native projects from app.config.js (plugin runs here)
+yarn workspace @carplay/example prebuild
 
-@main
-class AppDelegate: UIResponder, UIApplicationDelegate, RCTBridgeDelegate {
+# Run on iOS Simulator (CarPlay Simulator via Xcode → I/O → External Displays → CarPlay)
+yarn workspace @carplay/example ios
 
-  var window: UIWindow?
-  var bridge: RCTBridge?;
-  var rootView: RCTRootView?;
-
-  static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
-
-  func sourceURL(for bridge: RCTBridge!) -> URL! {
-    #if DEBUG
-    return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index");
-    #else
-    return Bundle.main.url(forResource:"main", withExtension:"jsbundle")
-    #endif
-  }
-
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    initializeFlipper(with: application)
-    self.bridge = RCTBridge.init(delegate: self, launchOptions: launchOptions)
-    self.rootView = RCTRootView.init(bridge: self.bridge!, moduleName: "Example", initialProperties: nil)
-    return true
-  }
-
-  func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-    if (connectingSceneSession.role == UISceneSession.Role.carTemplateApplication) {
-      let scene =  UISceneConfiguration(name: "CarPlay", sessionRole: connectingSceneSession.role)
-      scene.delegateClass = CarSceneDelegate.self
-      return scene
-    } else {
-      let scene =  UISceneConfiguration(name: "Phone", sessionRole: connectingSceneSession.role)
-      scene.delegateClass = PhoneSceneDelegate.self
-      return scene
-    }
-  }
-
-  func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-  }
-
-  private func initializeFlipper(with application: UIApplication) {
-    #if DEBUG
-    #if FB_SONARKIT_ENABLED
-    let client = FlipperClient.shared()
-    let layoutDescriptorMapper = SKDescriptorMapper(defaults: ())
-    client?.add(FlipperKitLayoutPlugin(rootNode: application, with: layoutDescriptorMapper!))
-    client?.add(FKUserDefaultsPlugin(suiteName: nil))
-    client?.add(FlipperKitReactPlugin())
-    client?.add(FlipperKitNetworkPlugin(networkAdapter: SKIOSNetworkAdapter()))
-    client?.start()
-    #endif
-    #endif
-  }
-}
+# Or run on Android (Android Auto via DHU — Desktop Head Unit)
+yarn workspace @carplay/example android
 ```
 
-Paste the following to your bridging header file `Example-Bridging-Header.h`:
+## Continuous Native Generation
 
-```objc
-// ios/Example-Bridging-Header.h
-#import "RNCarPlay.h"
+The `ios/` and `android/` directories are **gitignored**. They get
+regenerated on every `expo prebuild`. The
+[`react-native-automotive-expo-plugin`](../../packages/expo-plugin/)
+writes the CarPlay scene config, the entitlements, the AppDelegate
+notification delegate install, and the Android Auto manifest
+permissions automatically.
 
-#ifdef DEBUG
-#ifdef FB_SONARKIT_ENABLED
-#import <FlipperKit/FlipperClient.h>
-#import <FlipperKitLayoutPlugin/FlipperKitLayoutPlugin.h>
-#import <FlipperKitUserDefaultsPlugin/FKUserDefaultsPlugin.h>
-#import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
-#import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
-#import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
-#endif
-#endif
-```
-
-### 3. Add flags for Swift compiler in debug mode
-
-Go to XCode project, hit `Build Settings`, search for `Swift Compiler - Custom Flags` and then under `Active Compilation Conditions`, add the following flags to `Debug` only:
-
-  - DEBUG
-  - FB_SONARKIT_ENABLED
-
-### 4. Create Phone Scene
-
-Add a new Swift file called `PhoneScene.swift`:
-
-```swift
-// ios/PhoneScene.swift
-import Foundation
-import UIKit
-import SwiftUI
-
-class PhoneSceneDelegate: UIResponder, UIWindowSceneDelegate {
-  var window: UIWindow?
-  func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-    guard let appDelegate = (UIApplication.shared.delegate as? AppDelegate) else { return }
-    guard let windowScene = (scene as? UIWindowScene) else { return }
-
-    let rootViewController = UIViewController()
-    rootViewController.view = appDelegate.rootView;
-
-    let window = UIWindow(windowScene: windowScene)
-    window.rootViewController = rootViewController
-    self.window = window
-    window.makeKeyAndVisible()
-  }
-}
-
-```
-
-### 5. Create Car Scene
-
-Add a new Swift file called `CarScene.swift`
-
-```swift
-// ios/CarScene.swift
-import Foundation
-import CarPlay
-
-class CarSceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
-  func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
-                                  didConnect interfaceController: CPInterfaceController) {
-    RNCarPlay.connect(with: interfaceController, window: templateApplicationScene.carWindow);
-  }
-
-  func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene, didDisconnectInterfaceController interfaceController: CPInterfaceController) {
-    RNCarPlay.disconnect()
-  }
-}
-
-```
-
-### 6. Update the manifest in Info.plist
-
-Add the following ApplicationScene manifest to your `Info.plist` file.
-
-```xml
-	<key>UIApplicationSceneManifest</key>
-	<dict>
-		<key>UIApplicationSupportsMultipleScenes</key>
-		<true/>
-		<key>UISceneConfigurations</key>
-		<dict>
-			<key>CPTemplateApplicationSceneSessionRoleApplication</key>
-			<array>
-				<dict>
-					<key>UISceneClassName</key>
-					<string>CPTemplateApplicationScene</string>
-					<key>UISceneConfigurationName</key>
-					<string>CarPlay</string>
-					<key>UISceneDelegateClassName</key>
-					<string>$(PRODUCT_MODULE_NAME).CarSceneDelegate</string>
-				</dict>
-			</array>
-			<key>UIWindowSceneSessionRoleApplication</key>
-			<array>
-				<dict>
-					<key>UISceneClassName</key>
-					<string>UIWindowScene</string>
-					<key>UISceneConfigurationName</key>
-					<string>Phone</string>
-					<key>UISceneDelegateClassName</key>
-					<string>$(PRODUCT_MODULE_NAME).PhoneSceneDelegate</string>
-				</dict>
-			</array>
-		</dict>
-	</dict>
-```
-
+If you want to inspect what the plugin produced, run
+`yarn workspace @carplay/example prebuild` and open `ios/` or
+`android/`.
