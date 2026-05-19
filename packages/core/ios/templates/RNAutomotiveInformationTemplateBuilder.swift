@@ -29,7 +29,7 @@ public final class InformationTemplateBuilder: NSObject {
     emitter: RCTEventEmitter?
   ) -> CPInformationTemplate {
     let title = config["title"] as? String ?? ""
-    let layout: CPInformationTemplate.Layout =
+    let layout: CPInformationTemplateLayout =
       (config["leading"] as? Bool) ?? false ? .leading : .twoColumn
 
     let itemsConfig = (config["items"] as? [NSDictionary]) ?? []
