@@ -268,9 +268,8 @@ RCT_EXPORT_METHOD(createTemplate:(NSString *)templateId config:(NSDictionary*)co
         // Step 6: migrated to Swift. See templates/RNAutomotiveNowPlayingTemplateBuilder.swift
         carPlayTemplate = [RNAutomotiveNowPlayingTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
     } else if ([type isEqualToString:@"tabbar"]) {
-        CPTabBarTemplate *tabBarTemplate = [[CPTabBarTemplate alloc] initWithTemplates:[self parseTemplatesFrom:config]];
-        tabBarTemplate.delegate = self;
-        carPlayTemplate = tabBarTemplate;
+        // Step 6: migrated to Swift. See templates/RNAutomotiveTabBarTemplateBuilder.swift
+        carPlayTemplate = [RNAutomotiveTabBarTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
     } else if ([type isEqualToString:@"contact"]) {
         // Step 6: migrated to Swift. See templates/RNAutomotiveContactTemplateBuilder.swift
         carPlayTemplate = [RNAutomotiveContactTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
