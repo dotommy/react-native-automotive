@@ -244,11 +244,8 @@ RCT_EXPORT_METHOD(createTemplate:(NSString *)templateId config:(NSDictionary*)co
         carPlayTemplate = searchTemplate;
     }
     else if ([type isEqualToString:@"grid"]) {
-        NSArray *buttons = [self parseGridButtons:[RCTConvert NSArray:config[@"buttons"]] templateId:templateId];
-        CPGridTemplate *gridTemplate = [[CPGridTemplate alloc] initWithTitle:title gridButtons:buttons];
-        [gridTemplate setLeadingNavigationBarButtons:leadingNavigationBarButtons];
-        [gridTemplate setTrailingNavigationBarButtons:trailingNavigationBarButtons];
-        carPlayTemplate = gridTemplate;
+        // Step 6: migrated to Swift. See templates/RNAutomotiveGridTemplateBuilder.swift
+        carPlayTemplate = [RNAutomotiveGridTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
     }
     else if ([type isEqualToString:@"list"]) {
         NSArray *sections = [self parseSections:[RCTConvert NSArray:config[@"sections"]] templateId:templateId];
