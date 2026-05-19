@@ -355,13 +355,8 @@ RCT_EXPORT_METHOD(createTemplate:(NSString *)templateId config:(NSDictionary*)co
         tabBarTemplate.delegate = self;
         carPlayTemplate = tabBarTemplate;
     } else if ([type isEqualToString:@"contact"]) {
-        NSString *nm = [RCTConvert NSString:config[@"name"]];
-        UIImage *img = [RCTConvert UIImage:config[@"image"]];
-        CPContact *contact = [[CPContact alloc] initWithName:nm image:img];
-        [contact setSubtitle:config[@"subtitle"]];
-        [contact setActions:[self parseButtons:config[@"actions"] templateId:templateId]];
-        CPContactTemplate *contactTemplate = [[CPContactTemplate alloc] initWithContact:contact];
-        carPlayTemplate = contactTemplate;
+        // Step 6: migrated to Swift. See templates/RNAutomotiveContactTemplateBuilder.swift
+        carPlayTemplate = [RNAutomotiveContactTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
     } else if ([type isEqualToString:@"actionsheet"]) {
         // Step 6: migrated to Swift. See templates/RNAutomotiveActionSheetTemplateBuilder.swift
         carPlayTemplate = [RNAutomotiveActionSheetTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
