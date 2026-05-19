@@ -248,47 +248,8 @@ RCT_EXPORT_METHOD(createTemplate:(NSString *)templateId config:(NSDictionary*)co
         carPlayTemplate = [RNAutomotiveGridTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
     }
     else if ([type isEqualToString:@"list"]) {
-        NSArray *sections = [self parseSections:[RCTConvert NSArray:config[@"sections"]] templateId:templateId];
-        CPListTemplate *listTemplate;
-        if (@available(iOS 15.0, *)) {
-            if ([config objectForKey:@"assistant"]) {
-                NSDictionary *assistant = [config objectForKey:@"assistant"];
-                BOOL _enabled = [assistant valueForKey:@"enabled"];
-                if (_enabled) {
-                    CPAssistantCellConfiguration *conf = [[CPAssistantCellConfiguration alloc] initWithPosition:[RCTConvert CPAssistantCellPosition:[config valueForKey:@"position"]] visibility:[RCTConvert CPAssistantCellVisibility:[config valueForKey:@"visibility"]] assistantAction:[RCTConvert CPAssistantCellActionType:[config valueForKey:@"visibility"]]];
-                    listTemplate = [[CPListTemplate alloc] initWithTitle:title sections:sections assistantCellConfiguration:conf];
-                }
-            }
-        }
-        if (listTemplate == nil) {
-            // Fallback on earlier versions
-            listTemplate = [[CPListTemplate alloc] initWithTitle:title sections:sections];
-        }
-        [listTemplate setLeadingNavigationBarButtons:leadingNavigationBarButtons];
-        [listTemplate setTrailingNavigationBarButtons:trailingNavigationBarButtons];
-        if (![RCTConvert BOOL:config[@"backButtonHidden"]]) {
-            if (@available(iOS 14.0, *)) {
-                CPBarButton *backButton = [[CPBarButton alloc] initWithTitle:@" Back" handler:^(CPBarButton * _Nonnull barButton) {
-                    if (hasListeners) {
-                        [self sendEventWithName:@"backButtonPressed" body:@{@"templateId":templateId}];
-                    }
-                    [self popTemplate:false];
-                }];
-                [listTemplate setBackButton:backButton];
-            }
-        }
-        if (config[@"emptyViewTitleVariants"]) {
-            if (@available(iOS 14.0, *)) {
-                listTemplate.emptyViewTitleVariants = [RCTConvert NSArray:config[@"emptyViewTitleVariants"]];
-            }
-        }
-        if (config[@"emptyViewSubtitleVariants"]) {
-            if (@available(iOS 14.0, *)) {
-                listTemplate.emptyViewSubtitleVariants = [RCTConvert NSArray:config[@"emptyViewSubtitleVariants"]];
-            }
-        }
-        listTemplate.delegate = self;
-        carPlayTemplate = listTemplate;
+        // Step 6: migrated to Swift. See templates/RNAutomotiveListTemplateBuilder.swift
+        carPlayTemplate = [RNAutomotiveListTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
     }
     else if ([type isEqualToString:@"map"]) {
         CPMapTemplate *mapTemplate = [[CPMapTemplate alloc] init];
