@@ -384,28 +384,8 @@ RCT_EXPORT_METHOD(createTemplate:(NSString *)templateId config:(NSDictionary*)co
         poiTemplate.pointOfInterestDelegate = self;
         carPlayTemplate = poiTemplate;
     } else if ([type isEqualToString:@"information"]) {
-        NSString *title = [RCTConvert NSString:config[@"title"]];
-        CPInformationTemplateLayout layout = [RCTConvert BOOL:config[@"leading"]] ? CPInformationTemplateLayoutLeading : CPInformationTemplateLayoutTwoColumn;
-        NSMutableArray<__kindof CPInformationItem *> * items = [NSMutableArray new];
-        NSMutableArray<__kindof CPTextButton *> * actions = [NSMutableArray new];
-
-        NSArray<NSDictionary*> *_items = [RCTConvert NSDictionaryArray:config[@"items"]];
-        for (NSDictionary *_item in _items) {
-            [items addObject:[[CPInformationItem alloc] initWithTitle:_item[@"title"] detail:_item[@"detail"]]];
-        }
-
-        NSArray<NSDictionary*> *_actions = [RCTConvert NSDictionaryArray:config[@"actions"]];
-        for (NSDictionary *_action in _actions) {
-            CPTextButton *action = [[CPTextButton alloc] initWithTitle:_action[@"title"] textStyle:CPTextButtonStyleNormal handler:^(__kindof CPTextButton * _Nonnull contactButton) {
-                if (self->hasListeners) {
-                    [self sendEventWithName:@"actionButtonPressed" body:@{@"templateId":templateId, @"id": _action[@"id"] }];
-                }
-            }];
-            [actions addObject:action];
-        }
-
-        CPInformationTemplate *informationTemplate = [[CPInformationTemplate alloc] initWithTitle:title layout:layout items:items actions:actions];
-        carPlayTemplate = informationTemplate;
+        // Step 6: migrated to Swift. See templates/RNAutomotiveInformationTemplateBuilder.swift
+        carPlayTemplate = [RNAutomotiveInformationTemplateBuilder buildWithConfig:config templateId:templateId emitter:self];
     }
 
     if (config[@"tabSystemItem"]) {
