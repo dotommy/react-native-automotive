@@ -13531,7 +13531,7 @@ __metadata:
     rimraf: ^5.0.0
     typescript: ^5.0.4
   peerDependencies:
-    expo: "*"
+    expo: ">=52.0.0"
   languageName: unknown
   linkType: soft
 
@@ -13564,13 +13564,8 @@ __metadata:
     typedoc-plugin-markdown: 3.15.3
     typescript: 5.0.4
   peerDependencies:
-    react: ^17.0.2 || ^18.0.0
-    react-native: ^0.60.0
-  peerDependenciesMeta:
-    react:
-      optional: true
-    react-native:
-      optional: true
+    react: ^18.0.0 || ^19.0.0
+    react-native: ">=0.79.0"
   languageName: unknown
   linkType: soft
 
