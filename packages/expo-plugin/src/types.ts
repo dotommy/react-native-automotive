@@ -15,16 +15,28 @@ export type CarPlayCategory =
   | 'quick-food-ordering';
 
 /**
- * Android Auto app categories. Each app declares one in the manifest
- * as `<category android:name="androidx.car.app.category.<X>" />`.
+ * Categories supported by the `androidx.car.app` (`CarAppService`) pipeline
+ * on Android Auto. Each app declares one in the manifest as
+ * `<category android:name="androidx.car.app.category.<X>" />` inside the
+ * `CarAppService` intent-filter.
+ *
+ * **Not exhaustive of all Android Auto app types**:
+ * - `media` apps (Spotify, podcasts) use `MediaBrowserServiceCompat`,
+ *   a separate pipeline not handled by this plugin. A companion package
+ *   for media is on the roadmap (post-v1).
+ * - `messaging` apps use `NotificationCompat.CarExtender` with `RemoteInput`,
+ *   also not a `CarAppService` category — the
+ *   {@link react-native-automotive!AutomotiveNotifications | AutomotiveNotifications}
+ *   module already covers this cross-platform.
+ *
  * @see https://developer.android.com/training/cars/apps#categories
  */
 export type AndroidAutoCategory =
   | 'navigation'
-  | 'media'
-  | 'messaging'
-  | 'pointofinterest'
-  | 'iot';
+  | 'poi'
+  | 'iot'
+  | 'charging'
+  | 'weather';
 
 /**
  * Plugin options passed in the consumer's `app.config.js`:
@@ -47,10 +59,15 @@ export interface AutomotivePluginOptions {
   carPlayCategory: CarPlayCategory;
 
   /**
-   * The Android Auto category to declare. Currently informational —
-   * the library's manifest hard-codes `navigation` in the CarAppService
-   * intent filter; multi-category override lands in v1.1.
-   * Defaults to `'navigation'` to match the library default.
+   * The category to declare in the `CarAppService` intent-filter. Drives
+   * what kind of Android Auto app the system sees you as (navigation,
+   * point-of-interest, IoT, charging, weather).
+   *
+   * If `'navigation'`, the plugin additionally writes the
+   * `androidx.car.app.action.NAVIGATE` intent-filter so the system can
+   * route `geo:` navigation requests to your app.
+   *
+   * Defaults to `'navigation'`.
    */
   androidAutoCategory?: AndroidAutoCategory;
 }

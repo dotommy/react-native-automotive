@@ -7,20 +7,25 @@
   <uses-permission android:name="android.permission.WAKE_LOCK" />
 
   <application>
+    <!--
+      The `androidx.car.app.CarAppService` intent-filter (with its
+      `androidx.car.app.category.*` category) is declared by the consumer,
+      NOT by this library — the category depends on what kind of app the
+      consumer is shipping (NAVIGATION vs POI vs IOT vs CHARGING vs WEATHER).
+
+      Expo apps: the `react-native-automotive-expo-plugin` writes the
+      intent-filter at `expo prebuild` based on its `androidAutoCategory`
+      option. Bare RN apps: declare the intent-filter manually in your
+      app's `AndroidManifest.xml`.
+
+      The library-internal APP_RELOAD intent-filter stays here — it's not
+      category-dependent.
+    -->
     <service
       android:name=".AutomotiveService"
       android:exported="true">
       <intent-filter>
         <action android:name="io.automotive.rn.APP_RELOAD" />
-      </intent-filter>
-      <intent-filter>
-        <action android:name="androidx.car.app.CarAppService" />
-        <category android:name="androidx.car.app.category.NAVIGATION" />
-      </intent-filter>
-      <intent-filter>
-        <action android:name="androidx.car.app.action.NAVIGATE" />
-        <category android:name="android.intent.category.DEFAULT"/>
-        <data android:scheme="geo" />
       </intent-filter>
     </service>
     <meta-data

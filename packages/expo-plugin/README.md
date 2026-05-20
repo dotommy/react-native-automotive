@@ -39,7 +39,9 @@ npx expo prebuild
 | Option | Type | Required | Description |
 |---|---|:-:|---|
 | `carPlayCategory` | `'navigation' \| 'audio' \| 'communication' \| 'messaging' \| 'parking' \| 'fuel' \| 'driving-task' \| 'ev' \| 'quick-food-ordering'` | yes | The CarPlay entitlement to request from Apple. Apple requires exactly one `com.apple.developer.carplay-<category>` entitlement per app. |
-| `androidAutoCategory` | `'navigation' \| 'media' \| 'messaging' \| 'pointofinterest' \| 'iot'` | no | Informational in v1 — the library's `CarAppService` intent filter currently hard-codes `navigation`. Multi-category override lands in v1.1. Defaults to `'navigation'`. |
+| `androidAutoCategory` | `'navigation' \| 'poi' \| 'iot' \| 'charging' \| 'weather'` | no | Category for the `CarAppService` intent-filter. The plugin writes `androidx.car.app.category.<X>` accordingly. For `'navigation'`, also writes the `androidx.car.app.action.NAVIGATE` intent-filter (with `geo:` data scheme). Defaults to `'navigation'`. |
+
+> **Note on Android Auto categories**: media apps (Spotify, podcasts) use `MediaBrowserServiceCompat`, a different pipeline not covered by this plugin — companion package coming post-v1. Messaging apps use `NotificationCompat.CarExtender`, which the core lib's `AutomotiveNotifications` module already handles cross-platform.
 
 ## What it writes
 
@@ -55,13 +57,16 @@ Adds `import react_native_automotive` and a `NotificationsDelegate.install()` ca
 Works against both the Expo SDK 53 multi-line Swift template and older inline templates. Also handles legacy Objective-C `AppDelegate.m`.
 
 ### Android — `AndroidManifest.xml`
-Adds the `androidx.car.app.CATEGORY_*` permissions and ensures the `CarAppService` declaration is present.
+- Adds the `androidx.car.app.*` permissions (`NAVIGATION_TEMPLATES`, `MAP_TEMPLATES`, `ACCESS_SURFACE`, `WAKE_LOCK`).
+- Writes the `CarAppService` intent-filter with the chosen `androidAutoCategory`, attached to the lib's `AutomotiveService` (manifests merge at build time).
+- For `'navigation'` apps, also writes the `androidx.car.app.action.NAVIGATE` intent-filter with `geo:` data scheme so the system can route navigation intents.
+- Idempotent: previously-written intent-filters are dropped on each run, so switching `androidAutoCategory` between prebuilds doesn't accumulate stale entries.
 
-## What it does NOT do (out of scope for v1)
+## What it does NOT do
 
-- Auto-detect features — you declare `carPlayCategory` explicitly because Apple requires intentional category selection.
+- Auto-detect features — you declare `carPlayCategory` and `androidAutoCategory` explicitly because both Apple and Google require intentional category selection.
 - Request notification permissions at runtime — use a dedicated permissions library (e.g. `expo-notifications`).
-- Override the hard-coded Android Auto `NAVIGATION` category — coming in 1.1.
+- Configure Android Auto media apps — see the note above; that pipeline is a different Android Service (`MediaBrowserServiceCompat`) not covered here.
 
 ## Bare React Native
 

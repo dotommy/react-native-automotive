@@ -5,6 +5,7 @@ import { withCarPlayScene } from './withCarPlayScene';
 import { withCarPlayEntitlement } from './withCarPlayEntitlement';
 import { withNotificationsDelegate } from './withNotificationsDelegate';
 import { withAndroidCarAppPermissions } from './withAndroidCarAppPermissions';
+import { withAndroidCarAppService } from './withAndroidCarAppService';
 
 export type { AutomotivePluginOptions, CarPlayCategory, AndroidAutoCategory } from './types';
 
@@ -35,14 +36,18 @@ export type { AutomotivePluginOptions, CarPlayCategory, AndroidAutoCategory } fr
  *   based on `carPlayCategory`.
  * - **iOS AppDelegate**: injects `RNAutomotiveNotificationsDelegate.install()`
  *   so action button taps on notifications reach JS.
- * - **Android Manifest**: adds the `androidx.car.app.*` permissions.
+ * - **Android Manifest**: adds the `androidx.car.app.*` permissions, then
+ *   writes the `CarAppService` intent-filter with the chosen
+ *   `androidAutoCategory` (and the `NAVIGATE` intent-filter for navigation
+ *   apps).
  *
  * What it does NOT do (out of scope for v1):
  * - Auto-detect features (you declare `carPlayCategory` explicitly).
  * - Request notification permissions at runtime (use a permissions
  *   library separately).
- * - Override the library's hard-coded Android Auto category
- *   `NAVIGATION` (multi-category support lands in v1.1).
+ * - Configure Android Auto media (`MediaBrowserServiceCompat`) — that
+ *   pipeline is not covered by this package; a companion package is on
+ *   the post-v1 roadmap.
  */
 const withAutomotive: ConfigPlugin<AutomotivePluginOptions> = (config, options) => {
   if (!options || !options.carPlayCategory) {
@@ -53,6 +58,8 @@ const withAutomotive: ConfigPlugin<AutomotivePluginOptions> = (config, options) 
     );
   }
 
+  const androidAutoCategory = options.androidAutoCategory ?? 'navigation';
+
   return withPlugins(config, [
     // iOS
     withCarPlayScene,
@@ -60,6 +67,7 @@ const withAutomotive: ConfigPlugin<AutomotivePluginOptions> = (config, options) 
     withNotificationsDelegate,
     // Android
     withAndroidCarAppPermissions,
+    withAndroidCarAppService(androidAutoCategory),
   ]);
 };
 
