@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { CarPlay, ListTemplate } from 'react-native-automotive';
+import { Automotive, ListTemplate } from 'react-native-automotive';
 
 /**
- * Minimal demo: when CarPlay connects, set a ListTemplate as the root.
+ * Minimal demo: when the car head unit connects, set a ListTemplate as the root.
  *
  * This is the smallest possible end-to-end check that exercises:
  * - JS-side template constructor (Step 3 types)
  * - Bridge to iOS Swift / Android Kotlin builders (Step 6 / 7)
- * - CarPlay scene wiring via the Expo Config Plugin (Step 9)
+ * - CarPlay scene + Android Auto manifest wiring via the Expo Config Plugin (Step 9)
  *
  * A fuller demo covering every template + the notifications module
  * lands post-v1; this file proves the chain is alive.
@@ -22,7 +22,7 @@ export default function App() {
           {
             header: 'Demo',
             items: [
-              { text: 'Hello CarPlay 👋' },
+              { text: 'Hello, car 👋' },
               {
                 text: 'Tap me',
                 detailText: 'A list item with detail text',
@@ -34,11 +34,11 @@ export default function App() {
           console.log('Selected item index:', index);
         },
       });
-      CarPlay.setRootTemplate(template);
+      Automotive.setRootTemplate(template);
     };
 
-    CarPlay.registerOnConnect(onConnect);
-    return () => CarPlay.unregisterOnConnect(onConnect);
+    Automotive.registerOnConnect(onConnect);
+    return () => Automotive.unregisterOnConnect(onConnect);
   }, []);
 
   return (

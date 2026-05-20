@@ -18,7 +18,7 @@ import { TurboModuleRegistry } from 'react-native';
  * - JS consumers obtain the module via this default export
  *
  * Coexistence note (transitional):
- * - The legacy InternalCarPlay interface in CarPlay.ts remains during the
+ * - The legacy InternalAutomotive interface in Automotive.ts remains during the
  *   Old/New Architecture transition. Step 4/5 will swap consumers to this spec.
  */
 export interface Spec extends TurboModule {

@@ -33,7 +33,7 @@ import { PlaceListMapTemplate } from './experimental/PlaceListMapTemplate';
 import { PlaceListNavigationTemplate } from './experimental/PlaceListNavigationTemplate';
 import { RoutePreviewNavigationTemplate } from './experimental/RoutePreviewNavigationTemplate';
 
-export interface InternalCarPlay extends NativeModule {
+export interface InternalAutomotive extends NativeModule {
   checkForConnection(): void;
   setRootTemplate(templateId: string, animated: boolean): void;
   pushTemplate(templateId: string, animated: boolean): void;
@@ -104,7 +104,7 @@ export interface InternalCarPlay extends NativeModule {
   }): void;
 }
 
-const { RNCarPlay } = NativeModules as { RNCarPlay: InternalCarPlay };
+const { RNCarPlay } = NativeModules as { RNCarPlay: InternalAutomotive };
 
 export type PushableTemplates =
   | MapTemplate
@@ -142,22 +142,24 @@ export type OnConnectCallback = (window: WindowInformation) => void;
 export type OnDisconnectCallback = () => void;
 
 /**
- * A controller that manages all user interface elements appearing on your map displayed on the CarPlay screen.
+ * Singleton controller for the car interface (CarPlay on iOS, Android Auto on
+ * Android). Manages template navigation, connection lifecycle, and the bridge
+ * to the native module.
  */
-export class CarPlayInterface {
+export class AutomotiveInterface {
   /**
-   * React Native bridge to the CarPlay interface
+   * React Native bridge to the native automotive module.
    */
   public bridge = RNCarPlay;
 
   /**
-   * Boolean to denote if carplay is currently connected.
+   * Whether the device is currently connected to a car head unit.
    */
   public connected = false;
   public window: WindowInformation | undefined;
 
   /**
-   * CarPlay Event Emitter
+   * Event emitter bridged to the native automotive module.
    */
   public emitter = new NativeEventEmitter(RNCarPlay);
 
@@ -166,7 +168,6 @@ export class CarPlayInterface {
 
   constructor() {
     this.emitter.addListener('didConnect', (window: WindowInformation) => {
-      console.log('we are connected yes!');
       this.connected = true;
       this.window = window;
       this.onConnectCallbacks.forEach(callback => {
@@ -194,7 +195,7 @@ export class CarPlayInterface {
   }
 
   /**
-   * Fired when CarPlay is connected to the device.
+   * Fired when the car head unit (CarPlay or Android Auto) connects.
    */
   public registerOnConnect = (callback: OnConnectCallback) => {
     this.onConnectCallbacks.add(callback);
@@ -205,7 +206,7 @@ export class CarPlayInterface {
   };
 
   /**
-   * Fired when CarPlay is disconnected from the device.
+   * Fired when the car head unit (CarPlay or Android Auto) disconnects.
    */
   public registerOnDisconnect = (callback: OnDisconnectCallback) => {
     this.onDisconnectCallbacks.add(callback);
@@ -300,4 +301,4 @@ export class CarPlayInterface {
   }
 }
 
-export const CarPlay = new CarPlayInterface();
+export const Automotive = new AutomotiveInterface();

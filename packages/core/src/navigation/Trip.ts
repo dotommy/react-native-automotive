@@ -1,4 +1,4 @@
-import { CarPlay } from '../CarPlay';
+import { Automotive } from '../Automotive';
 
 export interface RouteChoice {
   additionalInformationVariants: string[];
@@ -31,6 +31,6 @@ export class Trip {
       this.id = `trip-${Date.now()}-${Math.round(Math.random() * Number.MAX_SAFE_INTEGER)}`;
     }
 
-    CarPlay.bridge.createTrip(this.id, config);
+    Automotive.bridge.createTrip(this.id, config);
   }
 }

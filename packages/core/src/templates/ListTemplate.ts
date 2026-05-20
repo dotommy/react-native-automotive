@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import { CarPlay } from '../CarPlay';
+import { Automotive } from '../Automotive';
 import { Action } from '../interfaces/Action';
 import { ListItem } from '../interfaces/ListItem';
 import { ListItemUpdate } from '../interfaces/ListItemUpdate';
@@ -106,7 +106,7 @@ export interface ListTemplateConfig extends TemplateConfig {
 }
 
 /**
- * A hierarchical list of menu items can be displayed on the CarPlay screen using a list template.
+ * A hierarchical list of menu items can be displayed on the car screen (CarPlay or Android Auto) using a list template.
  *
  * The List Template allows navigation apps to present a hierarchical list of menu items. It includes a navigation bar and a list view.
  *
@@ -128,23 +128,23 @@ export class ListTemplate extends Template<ListTemplateConfig> {
   constructor(public config: ListTemplateConfig) {
     super(config);
 
-    CarPlay.emitter.addListener('didSelectListItem', (e: { templateId: string; index: number }) => {
+    Automotive.emitter.addListener('didSelectListItem', (e: { templateId: string; index: number }) => {
       if (config.onItemSelect && e.templateId === this.id) {
         void Promise.resolve(config.onItemSelect(e)).then(() => {
           if (Platform.OS === 'ios') {
-            CarPlay.bridge.reactToSelectedResult(true);
+            Automotive.bridge.reactToSelectedResult(true);
           }
         });
       }
     });
 
-    CarPlay.emitter.addListener(
+    Automotive.emitter.addListener(
       'didSelectListItemRowImage',
       (e: { templateId: string; index: number; imageIndex: number }) => {
         if (config.onImageRowItemSelect && e.templateId === this.id) {
           void Promise.resolve(config.onImageRowItemSelect(e)).then(() => {
             if (Platform.OS === 'ios') {
-              CarPlay.bridge.reactToSelectedResult(true);
+              Automotive.bridge.reactToSelectedResult(true);
             }
           });
         }
@@ -154,7 +154,7 @@ export class ListTemplate extends Template<ListTemplateConfig> {
 
   public updateSections = (sections: ListSection[]) => {
     this.config.sections = sections;
-    return CarPlay.bridge.updateListTemplateSections(this.id, this.parseConfig(sections));
+    return Automotive.bridge.updateListTemplateSections(this.id, this.parseConfig(sections));
   };
 
   public updateListTemplateItem = (config: ListItemUpdate) => {
@@ -162,26 +162,26 @@ export class ListTemplate extends Template<ListTemplateConfig> {
     if (section) {
       section.items[config.itemIndex] = config;
     }
-    return CarPlay.bridge.updateListTemplateItem(this.id, this.parseConfig(config));
+    return Automotive.bridge.updateListTemplateItem(this.id, this.parseConfig(config));
   };
 
   public getMaximumListItemCount() {
-    return CarPlay.bridge.getMaximumListItemCount(this.id);
+    return Automotive.bridge.getMaximumListItemCount(this.id);
   }
 
   public getMaximumListSectionCount() {
-    return CarPlay.bridge.getMaximumListSectionCount(this.id);
+    return Automotive.bridge.getMaximumListSectionCount(this.id);
   }
 
   public getMaximumListItemImageSize() {
-    return CarPlay.bridge.getMaximumListItemImageSize(this.id);
+    return Automotive.bridge.getMaximumListItemImageSize(this.id);
   }
 
   public getMaximumNumberOfGridImages() {
-    return CarPlay.bridge.getMaximumNumberOfGridImages(this.id);
+    return Automotive.bridge.getMaximumNumberOfGridImages(this.id);
   }
 
   public getMaximumListImageRowItemImageSize() {
-    return CarPlay.bridge.getMaximumListImageRowItemImageSize(this.id);
+    return Automotive.bridge.getMaximumListImageRowItemImageSize(this.id);
   }
 }

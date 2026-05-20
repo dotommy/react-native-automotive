@@ -1,5 +1,5 @@
 import { Image, Platform } from 'react-native';
-import { CarPlay } from '../CarPlay';
+import { Automotive } from '../Automotive';
 import { ListItem } from '../interfaces/ListItem';
 import { BaseEvent, Template, TemplateConfig } from './Template';
 
@@ -39,7 +39,7 @@ export class SearchTemplate extends Template<SearchTemplateConfig> {
 
     super(config);
 
-    CarPlay.emitter.addListener(
+    Automotive.emitter.addListener(
       'updatedSearchText',
       (e: { searchText: string; templateId: string }) => {
         if (config.onSearch && e.templateId === this.id) {
@@ -49,19 +49,19 @@ export class SearchTemplate extends Template<SearchTemplateConfig> {
                 ...item,
                 image: item.image ? Image.resolveAssetSource(item.image) : undefined,
               }));
-              CarPlay.bridge.reactToUpdatedSearchText(e.templateId, parsedResults);
+              Automotive.bridge.reactToUpdatedSearchText(e.templateId, parsedResults);
             }
           });
         }
       },
     );
 
-    CarPlay.emitter.addListener(
+    Automotive.emitter.addListener(
       'selectedResult',
       (e: { templateId: string; index: number; id?: string }) => {
         if (config.onItemSelect && e.templateId === this.id) {
           void Promise.resolve(config.onItemSelect(e)).then(
-            () => Platform.OS === 'ios' && CarPlay.bridge.reactToSelectedResult(true),
+            () => Platform.OS === 'ios' && Automotive.bridge.reactToSelectedResult(true),
           );
         }
       },

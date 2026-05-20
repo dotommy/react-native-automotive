@@ -1,6 +1,6 @@
 import { AppRegistry, Platform } from 'react-native';
 import { Template, TemplateConfig } from '../Template';
-import { CarPlay } from '../../CarPlay';
+import { Automotive } from '../../Automotive';
 
 export interface AndroidNavigationBaseTemplateConfig extends TemplateConfig {
   /**
@@ -37,7 +37,7 @@ export class AndroidNavigationBaseTemplate<
       },
     });
 
-    CarPlay.bridge.createTemplate(
+    Automotive.bridge.createTemplate(
       this.id,
       this.parseConfig({ type: this.type, ...config, render: true }),
       callbackFn,

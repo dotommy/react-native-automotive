@@ -1,5 +1,5 @@
 import { AppRegistry, Platform } from 'react-native';
-import { CarPlay } from '../CarPlay';
+import { Automotive } from '../Automotive';
 import { MapButton } from '../interfaces/MapButton';
 import { NavigationAlert } from '../interfaces/NavigationAlert';
 import { TextConfiguration } from '../interfaces/TextConfiguration';
@@ -26,7 +26,7 @@ export interface MapTemplateConfig extends TemplateConfig {
    */
   tripEstimateStyle?: 'dark' | 'light';
   /**
-   * Your component to render inside CarPlay/Android Auto
+   * Your component to render inside the car map view (Automotive or Android Auto)
    * Example `component: MyComponent`
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -134,7 +134,7 @@ export class MapTemplate extends Template<MapTemplateConfig> {
       },
     });
 
-    CarPlay.bridge.createTemplate(
+    Automotive.bridge.createTemplate(
       this.id,
       this.parseConfig({ type: this.type, ...config, render: true }),
       callbackFn,
@@ -148,7 +148,7 @@ export class MapTemplate extends Template<MapTemplateConfig> {
    * @param trip Trip class instance
    */
   public async startNavigationSession(trip: Trip): Promise<NavigationSession> {
-    const res = await CarPlay.bridge.startNavigationSession(this.id, trip.id);
+    const res = await Automotive.bridge.startNavigationSession(this.id, trip.id);
     return new NavigationSession(res.navigationSessionId, trip, this);
   }
 
@@ -160,7 +160,7 @@ export class MapTemplate extends Template<MapTemplateConfig> {
     if (!travelEstimates.distanceUnits) {
       travelEstimates.distanceUnits = 'kilometers';
     }
-    CarPlay.bridge.updateTravelEstimatesForTrip(
+    Automotive.bridge.updateTravelEstimatesForTrip(
       this.id,
       trip.id,
       travelEstimates,
@@ -172,23 +172,23 @@ export class MapTemplate extends Template<MapTemplateConfig> {
    */
   public updateConfig(config: MapTemplateConfig) {
     this.config = config;
-    CarPlay.bridge.updateMapTemplateConfig(this.id, this.parseConfig(config));
+    Automotive.bridge.updateMapTemplateConfig(this.id, this.parseConfig(config));
   }
 
   public updateMapButtons(mapButtons: MapButton[]) {
     this.config.mapButtons = mapButtons;
-    CarPlay.bridge.updateMapTemplateMapButtons(this.id, this.parseConfig(mapButtons));
+    Automotive.bridge.updateMapTemplateMapButtons(this.id, this.parseConfig(mapButtons));
   }
 
   /**
    * Hides the display of trip previews.
    */
   public hideTripPreviews() {
-    CarPlay.bridge.hideTripPreviews(this.id);
+    Automotive.bridge.hideTripPreviews(this.id);
   }
 
   public showTripPreviews(tripPreviews: Trip[], textConfiguration: TextConfiguration = {}) {
-    CarPlay.bridge.showTripPreviews(
+    Automotive.bridge.showTripPreviews(
       this.id,
       tripPreviews.map(trip => trip.id),
       textConfiguration,
@@ -196,15 +196,15 @@ export class MapTemplate extends Template<MapTemplateConfig> {
   }
 
   public showRouteChoicesPreviewForTrip(trip: Trip, textConfiguration: TextConfiguration = {}) {
-    CarPlay.bridge.showRouteChoicesPreviewForTrip(this.id, trip.id, textConfiguration);
+    Automotive.bridge.showRouteChoicesPreviewForTrip(this.id, trip.id, textConfiguration);
   }
 
   public presentNavigationAlert(config: NavigationAlert, animated = true) {
-    CarPlay.bridge.presentNavigationAlert(this.id, config, animated);
+    Automotive.bridge.presentNavigationAlert(this.id, config, animated);
   }
 
   public dismissNavigationAlert(animated = true) {
-    CarPlay.bridge.dismissNavigationAlert(this.id, animated);
+    Automotive.bridge.dismissNavigationAlert(this.id, animated);
   }
 
   /**
@@ -216,7 +216,7 @@ export class MapTemplate extends Template<MapTemplateConfig> {
    * @param animated A Boolean value that determines whether to animate the panning interface.
    */
   public showPanningInterface(animated = false) {
-    CarPlay.bridge.showPanningInterface(this.id, animated);
+    Automotive.bridge.showPanningInterface(this.id, animated);
   }
 
   /**
@@ -226,6 +226,6 @@ export class MapTemplate extends Template<MapTemplateConfig> {
    * @param animated A Boolean value that determines whether to animate the dismissal of the panning interface.
    */
   public dismissPanningInterface(animated = false) {
-    CarPlay.bridge.dismissPanningInterface(this.id, animated);
+    Automotive.bridge.dismissPanningInterface(this.id, animated);
   }
 }

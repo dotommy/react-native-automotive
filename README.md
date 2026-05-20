@@ -54,22 +54,22 @@ npx expo prebuild
 ```tsx
 // App.tsx
 import { useEffect } from 'react';
-import { CarPlay, ListTemplate } from 'react-native-automotive';
+import { Automotive, ListTemplate } from 'react-native-automotive';
 
 export default function App() {
   useEffect(() => {
     const onConnect = () => {
-      CarPlay.setRootTemplate(new ListTemplate({
+      Automotive.setRootTemplate(new ListTemplate({
         title: 'My app',
         sections: [{
           header: 'Demo',
-          items: [{ text: 'Hello CarPlay' }],
+          items: [{ text: 'Hello, car' }],
         }],
         onItemSelect: async ({ index }) => console.log(index),
       }));
     };
-    CarPlay.registerOnConnect(onConnect);
-    return () => CarPlay.unregisterOnConnect(onConnect);
+    Automotive.registerOnConnect(onConnect);
+    return () => Automotive.unregisterOnConnect(onConnect);
   }, []);
 
   return null;
@@ -99,7 +99,7 @@ Each template has TSDoc on its constructor with the full prop reference. The hos
 
 ## Imperative vs. declarative
 
-The native CarPlay and Android Auto SDKs are template-based and rate-limited (Apple and Google both restrict UI update frequency for driver-distraction reasons). The library is **imperative-first** to match that constraint — you instantiate a template, then call `CarPlay.setRootTemplate(t)` / `CarPlay.pushTemplate(t)`.
+The native CarPlay and Android Auto SDKs are template-based and rate-limited (Apple and Google both restrict UI update frequency for driver-distraction reasons). The library is **imperative-first** to match that constraint — you instantiate a template, then call `Automotive.setRootTemplate(t)` / `Automotive.pushTemplate(t)`.
 
 A declarative React layer for unrestricted screens (map overlays) ships later in 1.x.
 
@@ -117,7 +117,7 @@ The native delegate is registered automatically by the Expo plugin, so action ta
 
 ## Example app
 
-[`apps/example`](apps/example/) is a minimal Expo bare workflow that boots a single `ListTemplate` when CarPlay connects. Run it from the monorepo root — see [`apps/example/README.md`](apps/example/README.md) for the exact commands.
+[`apps/example`](apps/example/) is a minimal Expo bare workflow that boots a single `ListTemplate` when the car head unit connects. Run it from the monorepo root — see [`apps/example/README.md`](apps/example/README.md) for the exact commands.
 
 ## Differences vs. `birkir/react-native-carplay`
 

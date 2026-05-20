@@ -24,7 +24,7 @@ export * from './templates/android/TabTemplate';
 // `react-native-automotive/experimental`.
 
 // Others
-export * from './CarPlay';
+export * from './Automotive';
 export * from './navigation/Trip';
 export * from './navigation/NavigationSession';
 

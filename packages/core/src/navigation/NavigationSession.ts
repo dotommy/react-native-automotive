@@ -1,4 +1,4 @@
-import { CarPlay } from '../CarPlay';
+import { Automotive } from '../Automotive';
 import { Maneuver } from '../interfaces/Maneuver';
 import { PauseReason } from '../interfaces/PauseReason';
 import { TravelEstimates } from '../interfaces/TravelEstimates';
@@ -13,8 +13,8 @@ export class NavigationSession {
 
   public updateManeuvers(maneuvers: Maneuver[]) {
     this.maneuvers = maneuvers;
-    const windowScale = CarPlay.window?.scale ?? 1;
-    CarPlay.bridge.updateManeuversNavigationSession(
+    const windowScale = Automotive.window?.scale ?? 1;
+    Automotive.bridge.updateManeuversNavigationSession(
       this.id,
       maneuvers.map(maneuver => {
         if (maneuver.symbolImage) {
@@ -40,18 +40,18 @@ export class NavigationSession {
     if (!travelEstimates.distanceUnits) {
       travelEstimates.distanceUnits = 'kilometers';
     }
-    CarPlay.bridge.updateTravelEstimatesNavigationSession(this.id, maneuverIndex, travelEstimates);
+    Automotive.bridge.updateTravelEstimatesNavigationSession(this.id, maneuverIndex, travelEstimates);
   }
 
   public cancel() {
-    CarPlay.bridge.cancelNavigationSession(this.id);
+    Automotive.bridge.cancelNavigationSession(this.id);
   }
 
   public finish() {
-    CarPlay.bridge.finishNavigationSession(this.id);
+    Automotive.bridge.finishNavigationSession(this.id);
   }
 
   public pause(reason: PauseReason, description?: string) {
-    CarPlay.bridge.pauseNavigationSession(this.id, reason, description);
+    Automotive.bridge.pauseNavigationSession(this.id, reason, description);
   }
 }

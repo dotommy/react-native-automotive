@@ -1,4 +1,4 @@
-import { CarPlay } from '../CarPlay';
+import { Automotive } from '../Automotive';
 import { VoiceControlState } from './VoiceControlState';
 import { Template } from '../templates/Template';
 
@@ -27,6 +27,6 @@ export class VoiceControlTemplate extends Template<VoiceControlTemplateConfig> {
   }
 
   public activateVoiceControlState(identifier: string) {
-    CarPlay.bridge.activateVoiceControlState(this.id, identifier);
+    Automotive.bridge.activateVoiceControlState(this.id, identifier);
   }
 }

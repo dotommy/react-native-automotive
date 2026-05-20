@@ -1,4 +1,4 @@
-import { CarPlay } from '../CarPlay';
+import { Automotive } from '../Automotive';
 import { GridTemplate } from './GridTemplate';
 import { InformationTemplate } from './InformationTemplate';
 import { ListTemplate } from './ListTemplate';
@@ -36,7 +36,7 @@ export class TabBarTemplate extends Template<TabBarTemplateConfig> {
   constructor(public config: TabBarTemplateConfig) {
     super(config);
 
-    CarPlay.emitter.addListener(
+    Automotive.emitter.addListener(
       'didSelectTemplate',
       (e: { templateId: string; selectedTemplateId: string }) => {
         if (config.onTemplateSelect && e.templateId === this.id) {
@@ -51,6 +51,6 @@ export class TabBarTemplate extends Template<TabBarTemplateConfig> {
 
   public updateTemplates = (config: TabBarTemplateConfig) => {
     this.config = config;
-    return CarPlay.bridge.updateTabBarTemplates(this.id, this.parseConfig(config));
+    return Automotive.bridge.updateTabBarTemplates(this.id, this.parseConfig(config));
   };
 }

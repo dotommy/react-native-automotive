@@ -1,5 +1,5 @@
 import { Image, ImageSourcePropType, Platform } from 'react-native';
-import { CarPlay } from '../CarPlay';
+import { Automotive } from '../Automotive';
 import { BarButton } from '../interfaces/BarButton';
 
 export interface BaseEvent {
@@ -106,7 +106,7 @@ export class Template<P> {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Object.entries(eventMap).forEach(([eventName, callbackName]: [string, any]) => {
-      CarPlay.emitter.addListener(eventName, (e: { id: string; templateId: string }) => {
+      Automotive.emitter.addListener(eventName, (e: { id: string; templateId: string }) => {
         const configEventName = callbackName as keyof Pick<
           TemplateConfig,
           | 'onWillAppear'
@@ -127,7 +127,7 @@ export class Template<P> {
           error && console.error(error);
         },
       });
-      CarPlay.bridge.createTemplate(
+      Automotive.bridge.createTemplate(
         this.id,
         this.parseConfig({ type: this.type, ...config }),
         callbackFn,
@@ -136,8 +136,7 @@ export class Template<P> {
   }
 
   updateTemplate = (config: P) => {
-    console.log('LETSGO!', config, this.type);
-    CarPlay.bridge.updateTemplate(this.id, this.parseConfig({ type: this.type, ...config }));
+    Automotive.bridge.updateTemplate(this.id, this.parseConfig({ type: this.type, ...config }));
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

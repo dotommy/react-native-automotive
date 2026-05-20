@@ -28,22 +28,22 @@ CarPlay and Android Auto both require **OEM-issued entitlements** from Apple/Goo
 
 ```tsx
 import { useEffect } from 'react';
-import { CarPlay, ListTemplate } from 'react-native-automotive';
+import { Automotive, ListTemplate } from 'react-native-automotive';
 
 export default function App() {
   useEffect(() => {
     const onConnect = () => {
-      CarPlay.setRootTemplate(new ListTemplate({
+      Automotive.setRootTemplate(new ListTemplate({
         title: 'My app',
         sections: [{
           header: 'Demo',
-          items: [{ text: 'Hello CarPlay' }],
+          items: [{ text: 'Hello, car' }],
         }],
         onItemSelect: async ({ index }) => console.log(index),
       }));
     };
-    CarPlay.registerOnConnect(onConnect);
-    return () => CarPlay.unregisterOnConnect(onConnect);
+    Automotive.registerOnConnect(onConnect);
+    return () => Automotive.unregisterOnConnect(onConnect);
   }, []);
   return null;
 }
@@ -99,15 +99,15 @@ Each template has TSDoc on its constructor with the full prop reference. A hoste
 
 ## Navigation API
 
-`CarPlay.setRootTemplate(template)` — replace the root.
-`CarPlay.pushTemplate(template, animated?)` — push onto the stack (the same template can't be pushed twice).
-`CarPlay.popTemplate(animated?)` — pop one.
-`CarPlay.popToTemplate(template, animated?)` — pop to a specific entry.
-`CarPlay.popToRoot(animated?)` — pop all.
-`CarPlay.presentTemplate(template, animated?)` — present modally (alerts, action sheets).
-`CarPlay.dismissTemplate(animated?)` — dismiss the modal.
-`CarPlay.registerOnConnect(cb)` / `unregisterOnConnect(cb)` — connection lifecycle.
-`CarPlay.registerOnDisconnect(cb)` / `unregisterOnDisconnect(cb)`.
+`Automotive.setRootTemplate(template)` — replace the root.
+`Automotive.pushTemplate(template, animated?)` — push onto the stack (the same template can't be pushed twice).
+`Automotive.popTemplate(animated?)` — pop one.
+`Automotive.popToTemplate(template, animated?)` — pop to a specific entry.
+`Automotive.popToRoot(animated?)` — pop all.
+`Automotive.presentTemplate(template, animated?)` — present modally (alerts, action sheets).
+`Automotive.dismissTemplate(animated?)` — dismiss the modal.
+`Automotive.registerOnConnect(cb)` / `unregisterOnConnect(cb)` — connection lifecycle.
+`Automotive.registerOnDisconnect(cb)` / `unregisterOnDisconnect(cb)`.
 
 ## Notifications
 
@@ -123,7 +123,7 @@ The native delegate is registered automatically by the Expo plugin, so taps reac
 
 ## Imperative-first by design
 
-The native CarPlay and Android Auto SDKs are template-based and rate-limit UI updates for driver-distraction reasons. The public API mirrors that: construct a template, hand it to `CarPlay.setRootTemplate` / `pushTemplate`. A declarative React layer for unrestricted screens ships later in 1.x.
+The native CarPlay and Android Auto SDKs are template-based and rate-limit UI updates for driver-distraction reasons. The public API mirrors that: construct a template, hand it to `Automotive.setRootTemplate` / `pushTemplate`. A declarative React layer for unrestricted screens ships later in 1.x.
 
 ## Source, issues, contributions
 
