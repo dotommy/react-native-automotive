@@ -25,13 +25,15 @@ If applicable, add screenshots to help explain your problem.
 
 **CarPlay (please complete the following information):**
  - Device: [e.g. iPhone 13 / Simulator]
- - OS version [e.g. iOS 16]
- - RNCarPlay version [e.g. 2.4.0]
+ - OS version: [e.g. iOS 17]
+ - react-native-automotive version: [e.g. 1.0.0]
+ - react-native-automotive-expo-plugin version (if used): [e.g. 1.0.0]
 
 **Android Auto (please complete the following information):**
- - Device: [e.g. Pixel 8 / emulator]
- - Android Version: [e.g. iOS8.1]
- - RNCarPlay version [e.g. 2.4.0]
+ - Device: [e.g. Pixel 8 / emulator + DHU]
+ - Android version: [e.g. 14]
+ - react-native-automotive version: [e.g. 1.0.0]
+ - react-native-automotive-expo-plugin version (if used): [e.g. 1.0.0]
 
 **Additional context**
 Add any other context about the problem here.
