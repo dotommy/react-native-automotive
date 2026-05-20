@@ -1,6 +1,6 @@
 {
   "name": "react-native-automotive-expo-plugin",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Expo Config Plugin for react-native-automotive: configures CarPlay (iOS UISceneDelegate + entitlements) and Android Auto (manifest + CarAppService) automatically during prebuild.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -10,6 +10,7 @@
     "src"
   ],
   "scripts": {
+    "prepack": "yarn run build",
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "clean": "rimraf lib",
@@ -24,8 +25,18 @@
     "react-native"
   ],
   "license": "MIT",
+  "author": "Tommaso (https://github.com/dotommy)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dotommy/react-native-automotive.git",
+    "directory": "packages/expo-plugin"
+  },
+  "homepage": "https://github.com/dotommy/react-native-automotive/tree/master/packages/expo-plugin#readme",
+  "bugs": {
+    "url": "https://github.com/dotommy/react-native-automotive/issues"
+  },
   "peerDependencies": {
-    "expo": "*"
+    "expo": ">=52.0.0"
   },
   "devDependencies": {
     "@expo/config-plugins": "^9.0.0",
