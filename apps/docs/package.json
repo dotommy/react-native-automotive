@@ -1,36 +1,19 @@
 {
-  "name": "@carplay/docs",
+  "name": "@automotive/docs",
   "version": "0.0.1",
-  "description": "Nextra docs template",
+  "private": true,
+  "type": "module",
+  "description": "Documentation site for react-native-automotive (VitePress).",
   "scripts": {
-    "dev": "next dev",
-    "export": "next export",
-    "build": "yarn build:typedoc && next build",
-    "start": "next start",
-    "build:typedoc": "./scripts/prepare.sh && typedoc && ./scripts/cleanup.sh"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shuding/nextra-docs-template.git"
-  },
-  "author": "Shu Ding <g@shud.in>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/shuding/nextra-docs-template/issues"
-  },
-  "homepage": "https://github.com/shuding/nextra-docs-template#readme",
-  "dependencies": {
-    "next": "^13.0.6",
-    "nextra": "latest",
-    "nextra-theme-docs": "latest",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/node": "18.11.10",
-    "typedoc": "^0.25.3",
-    "typedoc-github-wiki-theme": "^1.1.0",
-    "typedoc-plugin-markdown": "^3.16.0",
-    "typescript": "^4.9.3"
+    "@types/node": "^20.0.0",
+    "typescript": "~5.5.0",
+    "vitepress": "^1.5.0",
+    "vue": "^3.5.0"
   }
 }
