@@ -2,7 +2,7 @@
 
 React Native SDK for **Apple CarPlay** and **Android Auto**. One TypeScript API, both platforms, first-class **Expo Config Plugin** for zero-touch native setup.
 
-> Active rewrite of [`birkir/react-native-carplay`](https://github.com/birkir/react-native-carplay) (unmaintained since May 2023). Swift-only on iOS, Kotlin-only on Android, Expo support out of the box, dedicated notifications module.
+> Active rewrite of [`birkir/react-native-carplay`](https://github.com/birkir/react-native-carplay) (unmaintained since May 2023). Modern Swift + Kotlin native side, Expo support out of the box, dedicated notifications module.
 
 ## Status
 
@@ -123,7 +123,7 @@ The native delegate is registered automatically by the Expo plugin, so action ta
 
 |  | birkir | react-native-automotive |
 |---|---|---|
-| iOS language | Objective-C + Swift | **Swift only** |
+| iOS language | Objective-C + Swift | **Swift** (builders, scene, store, notifications) + slim Obj-C bridge (`RNCarPlay.m`) pending v2.0 conversion |
 | Android language | Java + Kotlin | **Kotlin only** |
 | RN architecture | Old Arch | Old + New Arch |
 | Expo support | None | **Config plugin** |

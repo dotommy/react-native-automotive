@@ -235,6 +235,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@automotive/example@workspace:apps/example":
+  version: 0.0.0-use.local
+  resolution: "@automotive/example@workspace:apps/example"
+  dependencies:
+    "@babel/core": ^7.25.0
+    "@types/react": ~19.0.0
+    expo: ^53.0.0
+    expo-build-properties: ~0.14.0
+    react: 19.0.0
+    react-native: 0.79.0
+    react-native-automotive: "workspace:*"
+    react-native-automotive-expo-plugin: "workspace:*"
+    typescript: ~5.5.0
+  languageName: unknown
+  linkType: soft
+
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.10.4, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.21.4":
   version: 7.21.4
   resolution: "@babel/code-frame@npm:7.21.4"
@@ -2542,22 +2558,6 @@ __metadata:
   checksum: 850f9305536d0f2bd13e9e0881cb5f02e4f93fad1189f7b2d4bebf694e3206924eadee1068130d43c11b750efcc9405f88a8e42ef098b6d75239c0f047de1a27
   languageName: node
   linkType: hard
-
-"@carplay/example@workspace:apps/example":
-  version: 0.0.0-use.local
-  resolution: "@carplay/example@workspace:apps/example"
-  dependencies:
-    "@babel/core": ^7.25.0
-    "@types/react": ~19.0.0
-    expo: ^53.0.0
-    expo-build-properties: ~0.14.0
-    react: 19.0.0
-    react-native: 0.79.0
-    react-native-automotive: "workspace:*"
-    react-native-automotive-expo-plugin: "workspace:*"
-    typescript: ~5.5.0
-  languageName: unknown
-  linkType: soft
 
 "@docsearch/css@npm:3.8.2":
   version: 3.8.2

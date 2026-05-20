@@ -4,8 +4,8 @@
 
 It's an active rewrite of [`birkir/react-native-carplay`](https://github.com/birkir/react-native-carplay), which was unmaintained since May 2023. The rewrite:
 
-- replaces all Objective-C with Swift on iOS
-- replaces all Java with Kotlin on Android
+- rewrites the iOS template builders, scene delegate, store, and notifications in Swift (the `RNCarPlay.m` orchestrator and a couple of helpers remain Obj-C — full Swift conversion is planned for v2.0)
+- replaces all Java with Kotlin on Android (no leftover Java)
 - adds a first-class **Expo Config Plugin** so you never hand-edit native files
 - adds a dedicated **notifications module** that works even when the app is fully terminated
 - aims for full feature parity between CarPlay and Android Auto, not "iOS first, Android maybe"

@@ -55,9 +55,9 @@ birkir had no Expo support. If you were on bare RN and hand-editing `Info.plist`
 
 New in this library. If you were rolling your own notifications via `INSendMessageIntent` and `NotificationCompat.CarExtender`, you can drop that code and use the unified [`AutomotiveNotifications`](/guide/notifications) API.
 
-### iOS native: Swift, not Objective-C
+### iOS native: Swift-heavy (with one residual Obj-C orchestrator)
 
-birkir shipped Obj-C with some Swift. We rewrote everything in Swift. **You don't need to do anything** — if you weren't subclassing or extending the native classes, the migration is transparent.
+birkir shipped Obj-C with some Swift. We rewrote the template builders, scene delegate, store, notifications, and helpers in Swift. The central `RNCarPlay.m` orchestrator (RCT delegates, CP*TemplateDelegate implementations) remains Obj-C — full Swift conversion is scheduled for v2.0. **You don't need to do anything** — if you weren't subclassing or extending the native classes, the migration is transparent.
 
 ### Android native: Kotlin, not Java
 

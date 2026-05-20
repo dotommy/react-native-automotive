@@ -2,7 +2,7 @@
 
 React Native SDK for **Apple CarPlay** and **Android Auto**. One TypeScript API, both platforms.
 
-Swift-only on iOS, Kotlin-only on Android. Old + New Architecture compatible. Dedicated notifications module.
+Modern Swift on iOS (with an `RNCarPlay.m` orchestrator residual from the upstream fork, slated for full Swift conversion in v2.0). Kotlin-only on Android. Old + New Architecture compatible. Dedicated notifications module.
 
 This is the **core** package — for zero-touch native setup in an Expo project, install [`react-native-automotive-expo-plugin`](https://www.npmjs.com/package/react-native-automotive-expo-plugin) alongside.
 

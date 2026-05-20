@@ -24,13 +24,13 @@ yarn install
 yarn turbo run build --filter=react-native-automotive --filter=react-native-automotive-expo-plugin
 
 # Generate native projects from app.config.js (plugin runs here)
-yarn workspace @carplay/example prebuild
+yarn workspace @automotive/example prebuild
 
 # Run on iOS Simulator (CarPlay Simulator via Xcode → I/O → External Displays → CarPlay)
-yarn workspace @carplay/example ios
+yarn workspace @automotive/example ios
 
 # Or run on Android (Android Auto via DHU — Desktop Head Unit)
-yarn workspace @carplay/example android
+yarn workspace @automotive/example android
 ```
 
 ## Continuous Native Generation
@@ -43,5 +43,5 @@ notification delegate install, and the Android Auto manifest
 permissions automatically.
 
 If you want to inspect what the plugin produced, run
-`yarn workspace @carplay/example prebuild` and open `ios/` or
+`yarn workspace @automotive/example prebuild` and open `ios/` or
 `android/`.

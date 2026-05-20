@@ -18,8 +18,8 @@ features:
     details: Write a template once, ship it on CarPlay (iOS) and Android Auto. Type-safe templates, type-safe events, type-safe everything.
   - title: Expo Config Plugin
     details: No hand-editing Info.plist, Entitlements, AppDelegate, or AndroidManifest. The plugin writes the right thing at every `expo prebuild`.
-  - title: Swift on iOS, Kotlin on Android
-    details: The native side was rewritten from scratch — no leftover Objective-C, no leftover Java. Old + New Architecture compatible.
+  - title: Modern Swift + Kotlin native
+    details: Android fully rewritten in Kotlin. iOS template builders, scene delegate, store, and notifications are Swift; the orchestrator `RNCarPlay.m` remains Obj-C pending full Swift conversion in v2.0. Old + New Architecture compatible.
   - title: Notifications module
     details: Action-button taps and quick-reply text reach JS even when the app is fully terminated. Same API on both platforms.
   - title: Active fork of birkir/react-native-carplay
