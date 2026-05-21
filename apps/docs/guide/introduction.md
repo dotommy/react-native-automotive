@@ -14,15 +14,24 @@ It's an active rewrite of [`birkir/react-native-carplay`](https://github.com/bir
 
 Both are projection systems: your phone (or the app installed on the head unit) renders a constrained UI onto the car's display. Each platform exposes a **template-based** SDK — you can't draw arbitrary pixels, you instantiate `List`, `Grid`, `Map`, `Tab`, `Search`, `Alert` templates and the system renders them with the right font sizes, hit targets, and safe areas for in-car use.
 
-Both Apple and Google **rate-limit UI updates** for driver-distraction reasons. You can't reactively re-render lists on every keystroke. The library mirrors this constraint with an **imperative-first** API:
+Both Apple and Google **rate-limit UI updates** for driver-distraction reasons. You can't reactively re-render lists on every keystroke. The library exposes **two parallel APIs**:
 
 ```ts
+// Imperative (full control, covers all templates)
 const t = new ListTemplate({ ... });
 Automotive.setRootTemplate(t);
-Automotive.pushTemplate(otherTemplate);
+
+// Declarative (JSX, covers List / Grid / Alert / ActionSheet in v1.2)
+<Automotive.Root>
+  <List title="...">
+    <List.Section header="...">
+      <List.Item text="..." onPress={...} />
+    </List.Section>
+  </List>
+</Automotive.Root>
 ```
 
-A declarative React layer for map screens (where Apple/Google relax the limits) is on the v1.x roadmap.
+The declarative reconciler internally calls surgical updates (`listTemplate.updateSections(...)`) so rate limits aren't an issue for normal use. The two styles **coexist in the same project** — see [Declarative API overview](/guide/declarative-overview).
 
 ## What you'll need
 

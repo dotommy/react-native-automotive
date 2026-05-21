@@ -28,6 +28,10 @@ export * from './Automotive';
 export * from './navigation/Trip';
 export * from './navigation/NavigationSession';
 
+// Declarative API (v1.2)
+// Components also accessible as namespace via `Automotive.Root`, etc.
+export { Root, List, Grid, Alert, ActionSheet } from './declarative';
+
 // Notifications module (Step 8)
 export * from './notifications/AutomotiveNotifications';
 export * from './notifications/types';

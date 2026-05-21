@@ -24,11 +24,29 @@ features:
     details: Action-button taps and quick-reply text reach JS even when the app is fully terminated. Same API on both platforms.
   - title: Active fork of birkir/react-native-carplay
     details: Continues the work of the upstream library (unmaintained since May 2023). One-line migration from the old API.
-  - title: Imperative-first, declarative coming
-    details: Mirrors the rate-limited native template APIs. A declarative React layer for map screens is on the v1.x roadmap.
+  - title: Imperative + Declarative API
+    details: Use whichever fits the screen. JSX (<List>, <Grid>, <Alert>, <ActionSheet>) for the 80% case. Imperative for full control or for templates not yet wrapped. The two styles coexist in the same project.
 ---
 
-## Quick taste
+## Quick taste — declarative (JSX)
+
+```tsx
+import { Automotive, List } from 'react-native-automotive';
+
+export default function App() {
+  return (
+    <Automotive.Root>
+      <List title="My app">
+        <List.Section header="Menu">
+          <List.Item text="Hello, car" onPress={() => console.log('tapped')} />
+        </List.Section>
+      </List>
+    </Automotive.Root>
+  );
+}
+```
+
+## …or imperative (full control)
 
 ```tsx
 import { useEffect } from 'react';
@@ -39,10 +57,7 @@ export default function App() {
     const onConnect = () => {
       Automotive.setRootTemplate(new ListTemplate({
         title: 'My app',
-        sections: [{
-          header: 'Menu',
-          items: [{ text: 'Hello, car' }],
-        }],
+        sections: [{ header: 'Menu', items: [{ text: 'Hello, car' }] }],
         onItemSelect: async ({ index }) => console.log(index),
       }));
     };
@@ -53,6 +68,6 @@ export default function App() {
 }
 ```
 
-That's the whole thing. The Expo plugin handles the rest of the native wiring — entitlements, scene config, manifest permissions, notification delegate. Connect to the CarPlay simulator or the Android Auto Desktop Head Unit and watch it run.
+Either way, the Expo plugin handles all native wiring (entitlements, scene config, manifest permissions, notification delegate). Connect to the CarPlay simulator or the Android Auto Desktop Head Unit and watch it run.
 
 [Continue to the full Getting Started →](/guide/introduction)

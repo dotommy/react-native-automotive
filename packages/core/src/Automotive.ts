@@ -32,6 +32,7 @@ import { TabTemplate } from './templates/android/TabTemplate';
 import { PlaceListMapTemplate } from './experimental/PlaceListMapTemplate';
 import { PlaceListNavigationTemplate } from './experimental/PlaceListNavigationTemplate';
 import { RoutePreviewNavigationTemplate } from './experimental/RoutePreviewNavigationTemplate';
+import { Root as DeclarativeRoot } from './declarative';
 
 export interface InternalAutomotive extends NativeModule {
   checkForConnection(): void;
@@ -301,4 +302,15 @@ export class AutomotiveInterface {
   }
 }
 
-export const Automotive = new AutomotiveInterface();
+/**
+ * Imperative singleton (template stack methods, connection lifecycle)
+ * augmented with the declarative entry point `Root` as a namespace
+ * property, so consumers can write `<Automotive.Root>...</Automotive.Root>`
+ * alongside the imperative `Automotive.setRootTemplate(...)` calls.
+ *
+ * The two styles coexist in the same project — see the declarative API
+ * guide in the docs.
+ */
+export const Automotive = Object.assign(new AutomotiveInterface(), {
+  Root: DeclarativeRoot,
+});

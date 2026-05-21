@@ -1,54 +1,60 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Automotive, ListTemplate } from 'react-native-automotive';
+import { Automotive, List, Alert } from 'react-native-automotive';
 
 /**
- * Minimal demo: when the car head unit connects, set a ListTemplate as the root.
+ * Minimal demo using the v1.2 declarative API:
+ * - `<Automotive.Root>` is the entry point
+ * - `<List>` + `<List.Section>` + `<List.Item>` render the menu
+ * - `<Alert>` is conditionally mounted to demo modal lifecycle
  *
- * This is the smallest possible end-to-end check that exercises:
- * - JS-side template constructor (Step 3 types)
- * - Bridge to iOS Swift / Android Kotlin builders (Step 6 / 7)
- * - CarPlay scene + Android Auto manifest wiring via the Expo Config Plugin (Step 9)
+ * Exercises end-to-end:
+ * - The react-reconciler host config (chunk 1)
+ * - List template translation + onPress routing (chunk 2)
+ * - Modal mount/unmount lifecycle (chunk 4)
  *
- * A fuller demo covering every template + the notifications module
- * lands post-v1; this file proves the chain is alive.
+ * Imperative API (Automotive.setRootTemplate / pushTemplate) still
+ * works for templates not yet wrapped declaratively — see the docs
+ * for the hybrid pattern.
  */
 export default function App() {
-  useEffect(() => {
-    const onConnect = () => {
-      const template = new ListTemplate({
-        title: 'react-native-automotive',
-        sections: [
-          {
-            header: 'Demo',
-            items: [
-              { text: 'Hello, car 👋' },
-              {
-                text: 'Tap me',
-                detailText: 'A list item with detail text',
-              },
-            ],
-          },
-        ],
-        onItemSelect: async ({ index }) => {
-          console.log('Selected item index:', index);
-        },
-      });
-      Automotive.setRootTemplate(template);
-    };
-
-    Automotive.registerOnConnect(onConnect);
-    return () => Automotive.unregisterOnConnect(onConnect);
-  }, []);
+  const [confirming, setConfirming] = useState<string | null>(null);
 
   return (
-    <View style={styles.root}>
-      <Text style={styles.title}>react-native-automotive demo</Text>
-      <Text style={styles.body}>
-        Connect to CarPlay or Android Auto to see the demo on the car
-        display.
-      </Text>
-    </View>
+    <>
+      <Automotive.Root>
+        <List title="react-native-automotive">
+          <List.Section header="Demo">
+            <List.Item
+              text="Hello, car 👋"
+              onPress={() => setConfirming('greet')}
+            />
+            <List.Item
+              text="Tap me"
+              detailText="A list item with detail text"
+              onPress={() => setConfirming('tap')}
+            />
+          </List.Section>
+        </List>
+
+        {confirming && (
+          <Alert title={confirming === 'greet' ? 'Hi from JS!' : 'You tapped me'}>
+            <Alert.Action
+              title="OK"
+              onPress={() => setConfirming(null)}
+            />
+          </Alert>
+        )}
+      </Automotive.Root>
+
+      <View style={styles.root}>
+        <Text style={styles.title}>react-native-automotive demo</Text>
+        <Text style={styles.body}>
+          Connect to CarPlay or Android Auto to see the demo on the car
+          display.
+        </Text>
+      </View>
+    </>
   );
 }
 

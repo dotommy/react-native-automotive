@@ -1,6 +1,8 @@
 # Imperative API
 
-The library is **imperative-first**. You construct a template instance, then call methods on `Automotive` to mount, push, pop, present, or dismiss it.
+The library exposes two parallel APIs. This page documents the **imperative** one, which works for all templates. For the **declarative (JSX)** API covering `<List>` / `<Grid>` / `<Alert>` / `<ActionSheet>`, see [Declarative API overview](/guide/declarative-overview). The two styles coexist freely in the same project.
+
+Imperative: you construct a template instance, then call methods on `Automotive` to mount, push, pop, present, or dismiss it.
 
 This mirrors how the native CarPlay and Android Auto SDKs actually work — both Apple's `CPTemplateNavigationController` and Android's `Screen` push/pop stack are imperative on the native side. We don't fake a reactive layer over a non-reactive native primitive.
 

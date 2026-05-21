@@ -8,6 +8,6 @@
     "noEmit": false,
     "outDir": "lib"
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "lib"]
 }

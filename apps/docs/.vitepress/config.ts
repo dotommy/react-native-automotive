@@ -67,6 +67,16 @@ export default defineConfig({
           ],
         },
         {
+          text: 'Declarative API',
+          collapsed: false,
+          items: [
+            { text: 'Overview', link: '/guide/declarative-overview' },
+            { text: '<List>', link: '/guide/declarative-list' },
+            { text: '<Grid>', link: '/guide/declarative-grid' },
+            { text: '<Alert> and <ActionSheet>', link: '/guide/declarative-modals' },
+          ],
+        },
+        {
           text: 'Modules',
           collapsed: false,
           items: [
